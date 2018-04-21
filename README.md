@@ -16,4 +16,8 @@ game_test/ (blank boilerplate/template):
     to run:
         1) right click game_test/build/index.html > preview
         2) click pop-out arrow in top right corner of preview tab, next to 'Browser'
-    
+
+
+
+github url:
+https://github.com/zwoolfolk/CS467
