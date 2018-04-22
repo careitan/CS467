@@ -20,4 +20,17 @@ game_test/ (blank boilerplate/template):
 
 
 github url:
-https://github.com/zwoolfolk/CS467
+    https://github.com/zwoolfolk/CS467
+
+
+melonJS tutorials:
+    https://medium.freecodecamp.org/lets-build-the-dig-dug-game-using-melonjs-5fc0c9fd7132
+    http://melonjs.github.io/tutorial-platformer/
+    http://melonjs.github.io/tutorial-space-invaders/
+    
+games made with melonJS (some have github links)
+    https://github.com/melonjs/melonJS/wiki/made-with-melonJS
+
+melonJS documentation:
+    https://github.com/melonjs/boilerplate
+    http://melonjs.github.io/melonJS/docs/
