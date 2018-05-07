@@ -1,17 +1,17 @@
-game.Knight = game.Troop.extend({
+game.Cavalry = game.Troop.extend({
 
     /**
      * constructor
      */
     init : function(x, y) {
         // call the constructor
-        var image = me.loader.getImage("knight");
+        var image = me.loader.getImage("cavalry");
         this._super(me.Entity, 'init', [x, y, {
         	image: image,
         	width: 32,
         	height: 32}]);
 
-        this.name = "testKnight";
+        this.name = "testCavalry";
 		this.renderable.flipX(true);
 		this.body.gravity = 0;
 		//this.floating = true;
@@ -41,7 +41,7 @@ game.Knight = game.Troop.extend({
 		this.hp = 15;
 		this.attack = 3;
 		this.attackType = "melee";
-		this.body.setVelocity(1, 1);
+		this.body.setVelocity(1.5, 1.5);
 		this.armor = 0;
 
    }});
