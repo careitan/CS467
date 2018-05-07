@@ -1,23 +1,34 @@
-game.Knight = me.Entity.extend({
+game.Knight = game.Troop.extend({
 
     /**
      * constructor
      */
-    init:function () {
+    init : function(x, y, team, teamContainer) {
         // call the constructor
-        var image = me.loader.getImage("knight");
-        this._super(me.Entity, 'init', [0, 0, {
+        if (team === 'yellow') {
+        	var image = me.loader.getImage("knight_yellow");
+        }
+        else if (team === 'blue') {
+        	var image = me.loader.getImage("knight_blue");
+        }
+        else if (team === 'red') {
+        	var image = me.loader.getImage("knight_red");
+        }
+        else if (team === 'green') {
+        	var image = me.loader.getImage("knight_green");
+        }
+        this._super(me.Entity, 'init', [x, y, {
         	image: image,
         	width: 32,
         	height: 32}]);
 
-        this.name = "testKnight";
+		this.team = team;
+        this.name = "Knight";
 		this.renderable.flipX(true);
 		this.body.gravity = 0;
-		console.log("KNIGHT COMIN");
+		//this.floating = true;
 	//	this.anchorPoint.set(10, 10);
-		this.body.setVelocity(1, 1);
-	//	this.body.collisionType = me.collision.types.PLAYER_OBJECT;
+		this.body.collisionType = me.collision.types.PLAYER_OBJECT;
 		this.alwaysUpdate = true;
 	//	this.renderable.addAnimation('walk', [2, 3, 4, 5, 6], 100);
 	//	this.renderable.addAnimation('walkV', [12], 100);
@@ -25,161 +36,32 @@ game.Knight = me.Entity.extend({
 	//	this.renderable.addAnimation('standV', [1, 2], 300);
 	//	this.renderable.addAnimation('fire', [14]);
 	//	this.renderable.setCurrentAnimation('walk');
-		needsMoveX = false;
-		needsMovey = false;
-   },
+		this.needsMoveX = false;
+		this.needsMovey = false;
+		this.autoTransform = true;
+		//this.unit_sel_img = me.loader.getImage("unit_selected");
+		this.selected = false;
+		//console.log(this);
 
-    /**
-     * update the entity
-     */
-    update : function (dt) {
-
-	    //ARROW KEY MOVEMENT
-	    if (me.input.isKeyPressed('left')) {
-	      // flip the sprite on horizontal axis
-	      this.renderable.flipX(false);
-
-	      // update the entity velocity
-	      this.body.vel.x -= this.body.accel.x * me.timer.tick;
-	    }
-	    else if (me.input.isKeyPressed('right')) {
-	      // unflip the sprite
-	      this.renderable.flipX(true);
-
-	      // update the entity velocity
-	      this.body.vel.x += this.body.accel.x * me.timer.tick;
-	    }
-	    else if (me.input.isKeyPressed('up')) {
-	      // update the entity velocity
-	      this.body.vel.y -= this.body.accel.y * me.timer.tick;
-	    }
-	    else if (me.input.isKeyPressed('down')) {
-	      // update the entity velocity
-	      this.body.vel.y += this.body.accel.y * me.timer.tick;
-	    }
-	    else if (me.input.isKeyPressed('leftclick')) {
-	      // update the entity velocity
-	      //this.body.vel.y += this.body.accel.y * me.timer.tick;
-		   var clickpos = me.input.globalToLocal(me.input.pointer.clientX, me.input.pointer.clientY);
-		   console.log(clickpos);
-		   /*while (this.pos.x != clickpos.x &&
-		   			this.pos.y != clickpos.y) {
-		    	console.log("MOVING");
-		    	if(this.pos.x < clickpos.x) {
-		    		this.body.vel.x += this.body.accel.x * me.timer.tick;
-		    	}
-		    	else if(this.pos.x > clickpos.x) {
-		    		this.body.vel.x -= this.body.accel.x * me.timer.tick;
-		    	}
-		    	else {
-		    		this.body.vel.x = 0;
-		    	}
-		    	if(this.pos.y < clickpos.y) {
-		    		this.body.vel.y += this.body.accel.y * me.timer.tick;
-		    	}
-		    	else if(this.pos.y > clickpos.y) {
-		    		this.body.vel.y -= this.body.accel.y * me.timer.tick;
-		    	}
-		    	else {
-		    		this.body.vel.x = 0;
-		    	}
-		    	
-		   }*/
-
-
-	   		if(needsMoveX && this.pos.x < clickpos.x - 16){
-		    	this.renderable.flipX(true);
-		    	this.body.vel.x += this.body.accel.x * me.timer.tick;
-		    }
-		  	else if(needsMoveX && this.pos.x > clickpos.x - 16){
-	    	    this.renderable.flipX(false);
-		    	this.body.vel.x -= this.body.accel.x * me.timer.tick;
-		    }
-		    else {
-		    	needsMoveX = false;
-		    }
-	   		if(needsMoveY && this.pos.y < clickpos.y - 16){
-		    	this.body.vel.y += this.body.accel.y * me.timer.tick;
-		    }
-		  	else if(needsMoveY && this.pos.y > clickpos.y - 16){
-		    	this.body.vel.y -= this.body.accel.y * me.timer.tick;
-		    }		  
-		    else{
-		    	needsMoveY = false;
-		    }
-
-		   
+		this.type = 'armyUnit';
+		this.teamContainer = teamContainer;
+		this.myBox = this.teamContainer.addChild(me.pool.pull("unitSelected"));
+		
+		// Unit Traits
+		this.hp = 20;
+		this.attack = 4;
+		this.attackType = "melee";
+		this.body.setVelocity(.8, .8);
+		this.armor = 0;
 
 
 
-
-
-	    }
-		else if (me.input.isKeyPressed('rightlick')) {
-	      // update the entity velocity
-	      this.body.vel.x += this.body.accel.x * me.timer.tick;
-	    }
-	    else {
-	      this.body.vel.x = 0;
-	      this.body.vel.y = 0;
-	    }
-
-
-
-
-
-
-        // apply physics to the body (this moves the entity)
-        this.body.update(dt);
-
-        // handle collisions against other shapes
-        me.collision.check(this);
-
-        // return true if we moved or if the renderable was updated
-       
-
-        //return (this._super(me.Entity, 'update', [dt]) || this.body.vel.x !== 0 || this.body.vel.y !== 0);
-    	return true;
-    },
-
-
-
-
-
-
-
-// onActivate function
- onActivateEvent: function () {
-    // register on the 'pointerdown' event
-    me.input.registerPointerEvent('pointerdown', me.game.viewport, this.pointerDown.bind(this));
-    console.log("CLICK");
- },
-
- // pointerDown event callback
- pointerDown: function (pointer) {
-   // do something
-   console.log("CLICKPOINTERDOWN");
-   needsMoveX = true;
-   needsMoveY = true;
-   // don"t propagate the event to other objects
-   return false;
- },
-
-
-
-
-
-
-
-   /**
-     * colision handler
-     * (called when colliding with other objects)
-     */
-//    onCollision : function (response, other) {
-        // Make all other objects solid
-//        return true;
-//    }
-
- 
-
+		//reset collision make smaller
+		this.body.removeShape(this.body.getShape(0));
+		this.body.addShape(new me.Rect(0,0,13,13));
+		this.body.updateBounds();
+		this.teamContainer = teamContainer;
+		//this.anchorPoint.set(0.5, .5);
+		this.clickpos = me.input.globalToLocal(0,0);
+	}
 });

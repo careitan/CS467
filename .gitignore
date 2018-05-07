@@ -1,4 +1,6 @@
 bin
 build
 .DS_Store
+*.c9
+.c9/
 node_modules/
