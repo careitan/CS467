@@ -2,7 +2,7 @@ game.Troop = me.Entity.extend({
 
     init : function() {
 		this.myBox = me.game.world.addChild(me.pool.pull("unitSelected"));
-
+		this.clickpos = me.input.globalToLocal(0,0);
 
    },
 
@@ -137,4 +137,59 @@ game.Troop = me.Entity.extend({
 
         //return (this._super(me.Entity, 'update', [dt]) || this.body.vel.x !== 0 || this.body.vel.y !== 0);
     	return true;
-    }});
+    },
+    
+    
+    
+    
+	/// colision handler
+	onCollision : function (response) {
+		//stop moving if colliding with b &&
+		// a is trying to move to a point that is inside b
+		if(response.b.containsPoint(response.a.clickpos.x, response.a.clickpos.y)){
+	   		response.a.needsMoveY = false;
+	   		response.a.needsMoveX = false;
+	   	}
+		else if(response.a.containsPoint(response.b.clickpos.x, response.b.clickpos.y)){
+	   		response.b.needsMoveY = false;
+	   		response.b.needsMoveX = false;
+	   	}
+	
+
+	   //X AXIS COLLISION
+	   //a's bottom edge collided with b (a is on top)
+	   if(response.overlapV.y < 0){
+	   		//a move up and b move down
+	   		response.a.pos.y++;
+	   		response.b.pos.y--;
+	   }
+	   //a's top edge collided with b (a is on bottom)
+	   else if(response.overlapV.y > 0){
+	   		//a move down and b move up
+	   		response.a.pos.y--;
+	   		response.b.pos.y++;
+	   }
+	   //Y AXIS COLLISION
+	   //a's right edge collided with b (a is on b's left)
+	   if(response.overlapV.x < 0){
+	   		//a move left and b move right
+	   		response.a.pos.x--;
+	   		response.b.pos.x++;
+	   }
+	   //a's left edge collided with b (a is on b's right)
+	   else if(response.overlapV.x > 0){
+	   		//a move right and b move left
+	   		response.a.pos.x++;
+	   		response.b.pos.x--;
+	   }
+
+
+	    // Make the object solid
+	    // false because this is only the illusion of collision
+	    // returning true causes strange teleporting behavior
+	    return false;
+	},
+
+	
+	
+});
