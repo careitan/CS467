@@ -19,9 +19,9 @@ game.PlayScreen = me.ScreenObject.extend({
         me.game.world.addChild(this.HUD);
 
         me.game.world.addChild(me.pool.pull("testKnight", 0, 0));
-        me.game.world.addChild(me.pool.pull("testKnight", 20, 20));
-        me.game.world.addChild(me.pool.pull("testCavalry", 60, 20));
-        me.game.world.addChild(me.pool.pull("testArcher", 100, 20));
+        me.game.world.addChild(me.pool.pull("testKnight", 50, 50));
+        me.game.world.addChild(me.pool.pull("testCavalry", 100, 100));
+        me.game.world.addChild(me.pool.pull("testArcher", 200, 200));
         me.game.world.addChild(me.pool.pull("testVillain"));
         me.game.world.addChild(me.pool.pull("selectbox"));
         me.game.world.addChild(me.pool.pull("unitSelected"));

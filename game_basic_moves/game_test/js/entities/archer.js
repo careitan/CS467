@@ -26,14 +26,12 @@ game.Archer = game.Troop.extend({
 	//	this.renderable.setCurrentAnimation('walk');
 		this.needsMoveX = false;
 		this.needsMovey = false;
-		this.clickpos = null;
 		this.autoTransform = true;
 		//this.unit_sel_img = me.loader.getImage("unit_selected");
 		this.selected = false;
 		//console.log(this);
 
 		this.type = 'armyUnit';
-		this.hasSelectBox = false;
 		this.myBox = me.game.world.addChild(me.pool.pull("unitSelected"));
 		this.attacking = false;
 
@@ -44,4 +42,10 @@ game.Archer = game.Troop.extend({
 		this.body.setVelocity(1, 1);
 		this.armor = 0;
 
+
+
+		//reset collision make smaller
+		this.body.removeShape(this.body.getShape(0));
+		this.body.addShape(new me.Rect(0,0,13,13));
+		//this.anchorPoint.set(0.5, .5);
    }});
