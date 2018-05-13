@@ -33,7 +33,6 @@ game.Knight = game.Troop.extend({
 
 		this.type = 'armyUnit';
 		this.myBox = me.game.world.addChild(me.pool.pull("unitSelected"));
-		this.attacking = false;
 
 		// Unit Traits
 		this.hp = 15;
@@ -48,4 +47,5 @@ game.Knight = game.Troop.extend({
 		this.body.removeShape(this.body.getShape(0));
 		this.body.addShape(new me.Rect(0,0,13,13));
 		//this.anchorPoint.set(0.5, .5);
+		this.clickpos = me.input.globalToLocal(0,0);
    }});
