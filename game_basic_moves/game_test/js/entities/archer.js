@@ -38,6 +38,7 @@ game.Archer = game.Troop.extend({
 		this.hp = 15;
 		this.attack = 3;
 		this.attackType = "ranged";
+		this.attackRange = 50;
 		this.body.setVelocity(1, 1);
 		this.armor = 0;
 

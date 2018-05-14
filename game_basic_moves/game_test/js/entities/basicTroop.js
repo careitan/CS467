@@ -8,7 +8,7 @@ game.Troop = me.Entity.extend({
 		this.beingAttacked = false;
 		this.attacker = null;
 		this.alive = true;
-		this.engaged = false;
+		this.engagedInCombat = false;
    },
 
 
@@ -40,6 +40,9 @@ game.Troop = me.Entity.extend({
 	    }
 		*/
 
+		// TODO: Make it possible for units to kite each other. This would probably be implemented by locking a unit in place if it
+		// has an attack queued.
+
 		if (this.hp <= 0) {
 			this.alive = false;
 			me.game.world.removeChild(this.myBox);
@@ -49,18 +52,61 @@ game.Troop = me.Entity.extend({
 	   			if(child.type === 'armyUnit' && child.attacker === deadUnit){
 	   					child.attacker = null;
 	   					child.beingAttacked = false;
-	   					child.engaged = false;
+	   					child.engagedInCombat = false;
 	   			}
 	   		})
 			
 		}
 		// First attempt at making the targeted unit begin to counterattack. Currently the original attacker gets locked in combat
 		// even after its target has been killed. Needs revision. -tb 5/9/18
-		//if (!this.attacking && this.beingAttacked) {
-		//	this.attacking = true;
-		//	this.myTarget = this.attacker;
-		//	this.clickpos = this.myTarget.pos;
-		//}
+		// Fixed by implementing a living/dead check on the unit registered as the 'attacker' of the unit in question. -tb 5/14/18
+		if (this.attacker != null) {
+			if (!this.attacking && this.beingAttacked && this.attacker.alive) {
+				this.attacking = true;
+				this.myTarget = this.attacker;
+				this.clickpos = this.myTarget.pos;
+			}
+		}
+
+		// Some checks to handle unit death and clear flags -tb 5/14/18
+		if (this.attacking) {
+			if (!this.myTarget.alive) {
+				this.attacking = false;
+				this.attackTarget = false;
+				this.engagedInCombat = false;
+			}
+		}
+		if (this.attacker != null) {
+			if (!this.attacker.alive) {
+				this.attacker = null;
+			}
+		}
+
+		// Handles distance from target calculations for attack purposes. Differentiates between combat styles -tb 5/14/18
+		if (this.attacking) {
+			if (this.attackType === 'melee') {
+				var distanceToTargetX = Math.abs(this.pos.x - this.myTarget.pos.x);
+				var distanceToTargetY = Math.abs(this.pos.y - this.myTarget.pos.y);
+				//console.log(distanceToTargetX);
+				//console.log(distanceToTargetY);
+				if (distanceToTargetX > 17 || distanceToTargetY > 17) {
+					this.needsMoveX = true;
+					this.needsMoveY = true;
+					this.engagedInCombat = false;
+				}
+			}
+			if (this.attackType === 'ranged') {
+				var distanceToTargetX = Math.abs(this.pos.x - this.myTarget.pos.x);
+				var distanceToTargetY = Math.abs(this.pos.y - this.myTarget.pos.y);
+				//console.log(distanceToTargetX);
+				//console.log(distanceToTargetY);
+				if (distanceToTargetX > this.attackRange || distanceToTargetY > this.attackRange) {
+					this.needsMoveX = true;
+					this.needsMoveY = true;
+					this.engagedInCombat = false;
+				}
+			}
+		}
 
 
 
@@ -69,6 +115,8 @@ game.Troop = me.Entity.extend({
 	   		// Need to make sure that these flags are cleared whenever a new right click is registered -tb
 	   		this.attacking = false;
 	   		this.attackTaget = false;
+	   		this.engagedInCombat = false;
+	   		this.beingAttacked = false;
 	   		// Using these local variables because I was running into scope issues inside of the forEach function below when trying
 	   		// to directly assign values to class variables using the 'this' keyword -tb
 	   		var pointerX = me.input.pointer.gameX;
@@ -153,13 +201,26 @@ game.Troop = me.Entity.extend({
 		    else{
 		    	Ycontinue = false;
 		    }
+
+		    // Stopping conditions for ranged units must be handled differently from those of melee units, but movement calculations are
+		    // identical, so the check can be performed here at the end of the block -tb 5/14/18
+		    if (this.attackType === 'ranged' && this.attacking) {
+		    	var distanceToTargetX = Math.abs(this.pos.x - this.myTarget.pos.x);
+				var distanceToTargetY = Math.abs(this.pos.y - this.myTarget.pos.y);
+				//console.log(distanceToTargetX);
+				//console.log(distanceToTargetY);
+				if (distanceToTargetX <= this.attackRange && distanceToTargetY <= this.attackRange) {
+					this.needsMoveX = false;
+					this.needsMoveY = false;
+			    }
 	    	
-	    	// Unit has satisfied the movement criteria for both axes. -tb
-		    if (!Ycontinue && !Xcontinue){
-		    	this.needsMoveY = false;
-		    	this.needsMoveX = false;
-		    }
-	    }
+		    	// Unit has satisfied the movement criteria for both axes. -tb
+			    if (!Ycontinue && !Xcontinue){
+			    	this.needsMoveY = false;
+			    	this.needsMoveX = false;
+			    }
+	  		}
+	  	}
 	    else {
 	      this.body.vel.x = 0;
 	      this.body.vel.y = 0;
@@ -167,13 +228,13 @@ game.Troop = me.Entity.extend({
 
 	    // The attacking flag is triggered if the unit is targeting another unit and has been pursuing it.
 	    // There is a check to make sure that the attacker has reached its target before inflicting any damage.
-	    // The engaged flag is just there to handle the initial strike. It is used to trigger the collection of a baseline timestamp.
+	    // The engagedInCombat flag is just there to handle the initial strike. It is used to trigger the collection of a baseline timestamp.
 	    // Once the current time reaches the baseline timestamp plus the attack delay, the attack handler is called. -tb
     	if (this.attacking && !this.needsMoveX && !this.needsMoveY) {
     		var tick = me.timer.getTime();
-    		if (!this.engaged) {
+    		if (!this.engagedInCombat) {
     			this.nextAttackTick = (tick + 1000);
-    			this.engaged = true;
+    			this.engagedInCombat = true;
     		}
     		else if (tick > this.nextAttackTick) {
     			this.attackHandler(this, this.myTarget);
@@ -220,10 +281,10 @@ game.Troop = me.Entity.extend({
     	target.attacker = attacker;
     	target.beingAttacked = true;
     	target.hp = target.hp - attacker.attack;
-    	//console.log(target.hp);
+    	console.log(target.hp);
     	if (target.hp <= 0) {
     		attacker.myTarget = null;
-    		attacker.engaged = false;
+    		attacker.engagedInCombat = false;
     		attacker.attacking = false;
     	}
     	return true;
