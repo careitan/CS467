@@ -25,6 +25,8 @@ game.PlayScreen = me.ScreenObject.extend({
         me.game.world.addChild(me.pool.pull("testVillain"));
         me.game.world.addChild(me.pool.pull("selectbox"));
         me.game.world.addChild(me.pool.pull("unitSelected"));
+        me.game.world.addChild(me.pool.pull("peasant", 400, 400));
+		//me.game.world.addChild(me.pool.pull("barracks", 100, 350));
 
 
 
@@ -41,6 +43,7 @@ game.PlayScreen = me.ScreenObject.extend({
         me.input.bindPointer(me.input.KEY.M);
 		me.input.bindKey(me.input.KEY.A, 'rightclick');
 		me.input.bindPointer(me.input.pointer.RIGHT, me.input.KEY.A);
+		me.input.bindKey(me.input.KEY.B, 'Bkey');
         //me.input.registerPointerEvent('pointerdown', me.game.viewport, this.pointerDown.bind(this));
     },
 

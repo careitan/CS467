@@ -37,6 +37,8 @@ var game = {
         me.pool.register("testArcher", game.Archer);
         me.pool.register("selectbox", game.selectbox);
         me.pool.register("unitSelected", game.unitSelected);
+        me.pool.register("peasant", game.Peasant);
+        me.pool.register("barracks", game.Barracks);
 
         // Enable for testing
         me.debug.renderHitBox = true

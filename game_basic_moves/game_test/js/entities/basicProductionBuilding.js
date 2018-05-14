@@ -1,4 +1,4 @@
-game.Troop = me.Entity.extend({
+game.BasicProductionBuilding = me.Entity.extend({
 
     init : function() {
 		this.myBox = me.game.world.addChild(me.pool.pull("unitSelected"));
@@ -9,40 +9,25 @@ game.Troop = me.Entity.extend({
 		this.attacker = null;
 		this.alive = true;
 		this.engaged = false;
+
+		this.body.gravity = 0;
+		this.body.collisionType = me.collision.types.WORLD_SHAPE;
+		this.alwaysUpdate = true;
+		this.autoTransform = true;
+		this.body.setVelocity(0, 0);
+
+    	this.spawnUnit = null;
+    	this.spawnTime = null;
+    	this.maxSpawn = null;
+
    },
 
-
+/*
     update : function (dt) {
 
-    	/*
-	    //ARROW KEY MOVEMENT
-	    if (me.input.isKeyPressed('left')) {
-	      // flip the sprite on horizontal axis
-	      this.renderable.flipX(false);
-
-	      // update the entity velocity
-	      this.body.vel.x -= this.body.accel.x * me.timer.tick;
-	    }
-	    else if (me.input.isKeyPressed('right')) {
-	      // unflip the sprite
-	      this.renderable.flipX(true);
-
-	      // update the entity velocity
-	      this.body.vel.x += this.body.accel.x * me.timer.tick;
-	    }
-	    else if (me.input.isKeyPressed('up')) {
-	      // update the entity velocity
-	      this.body.vel.y -= this.body.accel.y * me.timer.tick;
-	    }
-	    else if (me.input.isKeyPressed('down')) {
-	      // update the entity velocity
-	      this.body.vel.y += this.body.accel.y * me.timer.tick;
-	    }
-		*/
 
 		if (this.hp <= 0) {
 			this.alive = false;
-			me.game.world.removeChild(this.myBox);
 			me.game.world.removeChild(this);
 			var deadUnit = this;
 			me.game.world.forEach(function (child){
@@ -63,7 +48,7 @@ game.Troop = me.Entity.extend({
 		//}
 
 
-
+/*
 	   // else if (me.input.isKeyPressed('leftclick')) DEPRECATED
 	   	if(me.input.isKeyPressed('rightclick') && this.selected === true){
 	   		// Need to make sure that these flags are cleared whenever a new right click is registered -tb
@@ -80,7 +65,7 @@ game.Troop = me.Entity.extend({
 	   		// This is ugly and I'm sure there is a better way to pick a unit than spawning a 0x0 rect and seeing what overlaps it.
 	   		// But it is all I've been able to get to work so far. -tb
 			me.game.world.forEach(function (child){
-	   			if(clickSpot.overlaps(child) && (child.type === 'armyUnit' || child.type ==='building') && child != myself){
+	   			if(clickSpot.overlaps(child) && child.type === 'armyUnit' && child != myself){
 	   					attackRegistered = true;
 	   					attackTarget = child;
 	   			}
@@ -182,8 +167,6 @@ game.Troop = me.Entity.extend({
     	}
 
 
-	    //me.video.renderer.drawImage(this.unit_sel_img, 10,10,10,10);
-
 	    if(this.selected === true){
 	    	//console.log(me.video.renderer);
    			this.myBox.width = this.width;
@@ -198,20 +181,16 @@ game.Troop = me.Entity.extend({
    			this.myBox.height = 0;
    		}
 
+*/
 
 
-        // apply physics to the body (this moves the entity)
-        this.body.update(dt);
+		//UNIT SPAWNING
 
-        // handle collisions against other shapes
-        me.collision.check(this);
-
-        // return true if we moved or if the renderable was updated
-       
-
-        //return (this._super(me.Entity, 'update', [dt]) || this.body.vel.x !== 0 || this.body.vel.y !== 0);
+/*
     	return true;
     },
+
+/*
 
     // The attack handler takes both entities engaged in combat as its parameters
     // It deducts the 'attack strength' value of the attacking unit from the hp pool of the defending unit. -tb
@@ -226,118 +205,45 @@ game.Troop = me.Entity.extend({
     		attacker.engaged = false;
     		attacker.attacking = false;
     	}
-    	return true;
-    },
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
     
-    
-    
-    
-	/// colision handler
-	onCollision : function (response) {
-		//response.a = entity that is moving
-		//response.b = entity that a collided with
-		//stop moving if colliding with b &&
-		// a is trying to move to a point that is inside b
-		//console.log(response.a.clickpos.x);
-		if(response.b.containsPoint(response.a.clickpos.x, response.a.clickpos.y)){
-	   		response.a.needsMoveY = false;
-	   		response.a.needsMoveX = false;
-	   	}
-		//else if(response.a.containsPoint(response.b.clickpos.x, response.b.clickpos.y)){
-	   	//	response.b.needsMoveY = false;
-	   	//	response.b.needsMoveX = false;
-	   	//}
-	
+    spawnUnit : function(unitNameInPool, spawnTime, maxSpawnNumber, buildingX, buildingY) {
 
+    	console.log('my spawn unit will be '+unitNameInPool);
+    	console.log('my spawn time will be '+spawnTime);
+    	console.log('my max spawn will be '+maxSpawnNumber);
+    	console.log('spawn location is '+buildingX+', '+buildingY);
 
-	   	//NOTE: currently slightly buggy with cavalry/fast units
-		//BUILDING/WORLD COLLISION
-		if(response.a.type === 'building' || response.b.type === 'building'){
-		    //X AXIS COLLISION
-		    //UNIT IS ON BOTTOM OF BUILDING
-		    if(response.overlapV.y < 0){
-		    	if(response.a.type === 'armyUnit'){
-		    		response.a.pos.y++;
-		    		//console.log('col1');
-		    	}
-		    	else{
-		    		response.b.pos.y--;
-		    	}
-		    }
-		    //UNIT IS ON TOP OF BUILDING
-		    else if(response.overlapV.y > 0){
-		    	if(response.a.type === 'armyUnit'){
-		    		response.a.pos.y--;
-		    		//console.log('col2');
-		    	}
-		    	else{
-		    		response.b.pos.y++;
-		    	}
-		    }
-		    //Y AXIS COLLISION
-		    //UNIT IS TO RIGHT OF BUILDING
-		    if(response.overlapV.x < 0){
-		    	if(response.a.type === 'armyUnit'){
-		    		response.a.pos.x++;
-		    		//console.log('col3');
-		    	}
-		    	else{
-		    		response.b.pos.x--;
-		    	}
-		    }
-		    //UNIT IS TO LEFT OF BUILDING
-		    else if(response.overlapV.x > 0){
-		    	if(response.a.type === 'armyUnit'){
-		    		response.a.pos.x--;
-		    		//console.log('col4');
-		    	}
-		    	else{
-		    		response.b.pos.x++;
-		    	}
-		    }
-		}
+    	var id = me.timer.setInterval(function(){
+    		var spawnCount = 0;
+    		me.game.world.forEach(function (child){
+    			if(child.name === unitNameInPool){
+    				spawnCount++;
+    			}
+    		})
+    		console.log('there are currently '+spawnCount+' '+unitNameInPool+'s!');
+    		if(spawnCount < maxSpawnNumber){
+    			console.log('adding knight!');
+    			me.game.world.addChild(me.pool.pull(unitNameInPool, buildingX, buildingY));
+    		}
+    	}, spawnTime, false);
 
-
-
-
-	   	//UNIT COLLISION
-		//ONE COLLISION ALTERNATIVE: PUSH EACH OTHER
-		else if(response.a.type === 'armyUnit' && response.b.type === 'armyUnit'){
-		    //X AXIS COLLISION
-		    //a's bottom edge collided with b (a is on top)
-		    if(response.overlapV.y < 0){
-		   		//a move up and b move down
-		   		response.a.pos.y++;
-		   		response.b.pos.y--;
-		    }
-		    //a's top edge collided with b (a is on bottom)
-		    else if(response.overlapV.y > 0){
-		   		//a move down and b move up
-		   		response.a.pos.y--;
-		   		response.b.pos.y++;
-		    }
-		    //Y AXIS COLLISION
-		    //a's right edge collided with b (a is on b's left)
-		    if(response.overlapV.x < 0){
-		   		//a move left and b move right
-		   		response.a.pos.x--;
-		   		response.b.pos.x++;
-		    }
-		    //a's left edge collided with b (a is on b's right)
-		    else if(response.overlapV.x > 0){
-		   		//a move right and b move left
-		   		response.a.pos.x++;
-		   		response.b.pos.x--;
-		    }
-		}
-		
-
-	    // Make the object solid
-	    // false because this is only the illusion of collision
-	    // returning true causes strange teleporting behavior
-	    return false;
-	},
-
+    	return id;
+    }
 	
 	
 });
