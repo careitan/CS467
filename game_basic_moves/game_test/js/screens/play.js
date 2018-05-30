@@ -18,15 +18,28 @@ game.PlayScreen = me.ScreenObject.extend({
         this.HUD = new game.HUD.Container();
         me.game.world.addChild(this.HUD);
 
-        me.game.world.addChild(me.pool.pull("testKnight", 0, 0));
-        me.game.world.addChild(me.pool.pull("testKnight", 50, 50));
-        me.game.world.addChild(me.pool.pull("testCavalry", 100, 100));
-        me.game.world.addChild(me.pool.pull("testArcher", 200, 200));
-        me.game.world.addChild(me.pool.pull("testVillain"));
+        me.game.world.addChild(me.pool.pull("Knight", 0, 20, 'blue'));
+        me.game.world.addChild(me.pool.pull("Knight", 50, 70, 'green'));
+        me.game.world.addChild(me.pool.pull("Knight", 100, 120, 'red'));
+        me.game.world.addChild(me.pool.pull("Knight", 150, 170, 'yellow'));
+        me.game.world.addChild(me.pool.pull("Archer", 50, 20, 'blue'));
+        me.game.world.addChild(me.pool.pull("Archer", 100, 70, 'green'));
+        me.game.world.addChild(me.pool.pull("Archer", 150, 120, 'red'));
+        me.game.world.addChild(me.pool.pull("Archer", 200, 170, 'yellow'));
+        me.game.world.addChild(me.pool.pull("Cavalry", 100, 20, 'blue'));
+        me.game.world.addChild(me.pool.pull("Cavalry", 150, 70, 'green'));
+        me.game.world.addChild(me.pool.pull("Cavalry", 200, 120, 'red'));
+        me.game.world.addChild(me.pool.pull("Cavalry", 250, 170, 'yellow'));
+        me.game.world.addChild(me.pool.pull("Recruit", 150, 20, 'blue'));
+        me.game.world.addChild(me.pool.pull("Recruit", 200, 70, 'green'));
+        me.game.world.addChild(me.pool.pull("Recruit", 250, 120, 'red'));
+        me.game.world.addChild(me.pool.pull("Recruit", 300, 170, 'yellow'));
         me.game.world.addChild(me.pool.pull("selectbox"));
         me.game.world.addChild(me.pool.pull("unitSelected"));
         me.game.world.addChild(me.pool.pull("peasant", 400, 400));
 		//me.game.world.addChild(me.pool.pull("barracks", 100, 350));
+		me.game.world.addChild(me.pool.pull("camera"));
+        me.game.world.addChild(me.pool.pull("goldmine",450, 450));
 
 
 

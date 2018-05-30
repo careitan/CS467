@@ -28,9 +28,11 @@ game.Barracks = game.BasicProductionBuilding.extend({
 		this.body.removeShape(this.body.getShape(0));
 		this.body.addShape(new me.Rect(0,0,128,93));
 		this.body.getShape(0).translate(0,20);
-
-		this.spawnId = this._super(game.BasicProductionBuilding, 'spawnUnit', ['testKnight', 3000, 10, this.pos.x, this.pos.y]);
-		console.log(this.spawnId);
+		
+		
+	//***FIX - temp disable spawning while units etc. being finalized ***
+	//	this.spawnId = this._super(game.BasicProductionBuilding, 'spawnUnit', ['Knight', 3000, 10, this.pos.x, this.pos.y]);
+	//	console.log(this.spawnId);
    },
 
 

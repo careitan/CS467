@@ -3,15 +3,27 @@ game.Archer = game.Troop.extend({
     /**
      * constructor
      */
-    init : function(x, y) {
+    init : function(x, y, team) {
         // call the constructor
-        var image = me.loader.getImage("archer");
+        if (team === 'blue') {
+        	var image = me.loader.getImage("archer_blue");
+        }
+        else if (team === 'green') {
+        	var image = me.loader.getImage("archer_green");
+        }
+        else if (team === 'red') {
+        	var image = me.loader.getImage("archer_red");
+        }
+        else if (team === 'yellow') {
+        	var image = me.loader.getImage("archer_yellow");
+        }
         this._super(me.Entity, 'init', [x, y, {
         	image: image,
         	width: 32,
         	height: 32}]);
 
-        this.name = "testArcher";
+		this.team = team;
+        this.name = "Archer";
 		this.renderable.flipX(true);
 		this.body.gravity = 0;
 		//this.floating = true;
@@ -36,10 +48,10 @@ game.Archer = game.Troop.extend({
 
 		// Unit Traits
 		this.hp = 15;
-		this.attack = 3;
+		this.attack = 2;
 		this.attackType = "ranged";
-		this.attackRange = 50;
-		this.body.setVelocity(1, 1);
+		this.attackRange = 200;
+		this.body.setVelocity(.5, .5);
 		this.armor = 0;
 
 

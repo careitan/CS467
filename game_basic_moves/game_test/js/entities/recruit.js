@@ -1,4 +1,4 @@
-game.Knight = game.Troop.extend({
+game.Recruit = game.Troop.extend({
 
     /**
      * constructor
@@ -6,16 +6,16 @@ game.Knight = game.Troop.extend({
     init : function(x, y, team) {
         // call the constructor
         if (team === 'yellow') {
-        	var image = me.loader.getImage("knight_yellow");
+        	var image = me.loader.getImage("recruit_yellow");
         }
         else if (team === 'blue') {
-        	var image = me.loader.getImage("knight_blue");
+        	var image = me.loader.getImage("recruit_blue");
         }
         else if (team === 'red') {
-        	var image = me.loader.getImage("knight_red");
+        	var image = me.loader.getImage("recruit_red");
         }
         else if (team === 'green') {
-        	var image = me.loader.getImage("knight_green");
+        	var image = me.loader.getImage("recruit_green");
         }
         this._super(me.Entity, 'init', [x, y, {
         	image: image,
@@ -23,7 +23,7 @@ game.Knight = game.Troop.extend({
         	height: 32}]);
 
 		this.team = team;
-        this.name = "Knight";
+        this.name = "Recruit";
 		this.renderable.flipX(true);
 		this.body.gravity = 0;
 		//this.floating = true;
@@ -48,7 +48,7 @@ game.Knight = game.Troop.extend({
 
 		// Unit Traits
 		this.hp = 20;
-		this.attack = 4;
+		this.attack = 3;
 		this.attackType = "melee";
 		this.body.setVelocity(.8, .8);
 		this.armor = 0;

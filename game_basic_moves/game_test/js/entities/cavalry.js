@@ -3,15 +3,27 @@ game.Cavalry = game.Troop.extend({
     /**
      * constructor
      */
-    init : function(x, y) {
+    init : function(x, y, team) {
         // call the constructor
-        var image = me.loader.getImage("cavalry");
+        if (team === 'blue') {
+        	var image = me.loader.getImage("cavalry_blue");
+        }
+        else if (team === 'green') {
+        	var image = me.loader.getImage("cavalry_green");
+        }
+        else if (team === 'red') {
+        	var image = me.loader.getImage("cavalry_red");
+        }
+        else if (team === 'yellow') {
+        	var image = me.loader.getImage("cavalry_yellow");
+        }
         this._super(me.Entity, 'init', [x, y, {
         	image: image,
         	width: 32,
         	height: 32}]);
 
-        this.name = "testCavalry";
+		this.team = team;
+        this.name = "Cavalry";
 		this.renderable.flipX(true);
 		this.body.gravity = 0;
 		//this.floating = true;
@@ -38,7 +50,7 @@ game.Cavalry = game.Troop.extend({
 		this.hp = 15;
 		this.attack = 3;
 		this.attackType = "melee";
-		this.body.setVelocity(1.5, 1.5);
+		this.body.setVelocity(1, 1);
 		this.armor = 0;
 
 

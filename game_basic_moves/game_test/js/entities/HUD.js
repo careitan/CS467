@@ -7,21 +7,46 @@ game.HUD = game.HUD || {};
 
 game.HUD.Container = me.Container.extend({
 
-    init: function() {
+    init: function(x, y, width, height, label) {
         // call the constructor
-        this._super(me.Container, 'init');
+        this._super(me.Container, 'init', [x, y, width, height]);
+        this.anchorPoint.set(0, 0);
 
         // persistent across level change
         this.isPersistent = true;
 
+        //draw in front
+        this.z = Infinity;
+
+        this.floating = true;
+
         // make sure we use screen coordinates
         this.floating = true;
+
+        //this.width = 100;
+        //this.height = 100;
 
         // give a name
         this.name = "HUD";
 
+        this.backPanel = new (me.Renderable.extend({
+        	init: function() {
+        		this._super(me.Renderable, 'init', [100,100,100,100]);
+        	},
+
+   /*     	draw : function(renderer) {
+            	renderer.setColor('#008e99');
+            	renderer.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+
+        	},*/
+        }));
+        this.addChild(this.backPanel);
+
+
+
+
         // add our child score object at the top left corner
-        this.addChild(new game.HUD.ScoreItem(5, 5));
+        //this.addChild(new game.HUD.ScoreItem(5, 5));
     }
 });
 

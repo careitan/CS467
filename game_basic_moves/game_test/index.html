@@ -15,7 +15,7 @@
     </head>
     <body>
         <!-- Canvas placeholder -->
-        <div id="screen"></div>
+        <div id="screen" style="float: left;"></div>
 
         <!-- an optional ES5-Shim
         <script type="text/javascript" src="lib/es5-shim.min.js"></script>
@@ -38,12 +38,15 @@
         <script type="text/javascript" src="js/entities/basicTroop.js"></script>
         <script type="text/javascript" src="js/entities/knight.js"></script>
         <script type="text/javascript" src="js/entities/archer.js"></script>
+        <script type="text/javascript" src="js/entities/recruit.js"></script>
         <script type="text/javascript" src="js/entities/villain.js"></script>
         <script type="text/javascript" src="js/entities/cavalry.js"></script>
         <script type="text/javascript" src="js/entities/peasant.js"></script>
         <script type="text/javascript" src="js/entities/basicProductionBuilding.js"></script>
         <script type="text/javascript" src="js/entities/barracks.js"></script>
         <script type="text/javascript" src="js/entities/HUD.js"></script>
+        <script type="text/javascript" src="js/entities/camera.js"></script>
+        <script type="text/javascript" src="js/entities/goldmine.js"></script>
 
         <script type="text/javascript" src="js/screens/title.js"></script>
         <script type="text/javascript" src="js/screens/play.js"></script>
@@ -55,5 +58,45 @@
                 game.onload();
             });
         </script>
+        
+        
+
+        <style type='text/css'>
+        * { text-align: right }
+            body {
+                width: 100%;
+                height: 100%;
+                padding: 0;
+                margin: 0;
+                background-color:#090107;
+                color:#ffffb1;
+                font-family:"Arial", Arial, sans-serif;
+
+            }
+            p {
+                font-size:14px;
+                letter-spacing:1px;
+                line-height:20px;
+                text-align: left;
+            }
+			#instructions {
+                text-align: right;
+                margin: 0 auto;
+                width: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id='instructions' style="float: right;">
+        </div>
+        <p>Left click to select a unit, or drag to select multiple.<br/><br/>
+        	Right click to order selected units to move, attack, or mine gold (peasants only).<br/><br/>
+            Each mining peasant increases your gold per second by 1.<br/><br/>
+            AVAILABLE BUILDINGS:<br/> (Select a peasant and press the key to build it)<br/>
+            B - Barracks - Knights - 500g<br/>
+        </p>
+    </body>
+
+
     </body>
 </html>

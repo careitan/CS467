@@ -28,6 +28,8 @@ game.Peasant = game.Troop.extend({
 		this.autoTransform = true;
 		//this.unit_sel_img = me.loader.getImage("unit_selected");
 		this.selected = false;
+		this.mining = false;
+		this.miningId = null;
 		//console.log(this);
 
 		this.type = 'armyUnit';
@@ -60,6 +62,14 @@ game.Peasant = game.Troop.extend({
 
     	//call regular troop update
     	this._super(game.Troop, 'update', [dt]);
-    }
+    },
 
+
+    givePlayerGold : function(goldPerFiveSeconds) {
+    	var id = me.timer.setInterval(function(){
+    		console.log('giving ' + goldPerFiveSeconds + ' gold!');
+    	}, 5000, false);
+
+    	return id;
+    }
 });

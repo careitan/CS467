@@ -3,12 +3,15 @@ game.Troop = me.Entity.extend({
     init : function() {
 		this.myBox = me.game.world.addChild(me.pool.pull("unitSelected"));
 		this.clickpos = me.input.globalToLocal(0,0);
+		this.team = team;
 		this.myTarget = null;
 		this.attacking = false;
 		this.beingAttacked = false;
 		this.attacker = null;
 		this.alive = true;
 		this.engagedInCombat = false;
+		this.nextAttackTick = 999999999;
+		this.alwaysUpdate = true;
    },
 
 
@@ -128,7 +131,7 @@ game.Troop = me.Entity.extend({
 	   		// This is ugly and I'm sure there is a better way to pick a unit than spawning a 0x0 rect and seeing what overlaps it.
 	   		// But it is all I've been able to get to work so far. -tb
 			me.game.world.forEach(function (child){
-	   			if(clickSpot.overlaps(child) && (child.type === 'armyUnit' || child.type ==='building') && child != myself){
+	   			if(clickSpot.overlaps(child) && (child.type === 'armyUnit' || child.type ==='building') && (child != myself) && (child.team != myself.team)){
 	   					attackRegistered = true;
 	   					attackTarget = child;
 	   			}
@@ -213,6 +216,7 @@ game.Troop = me.Entity.extend({
 					this.needsMoveX = false;
 					this.needsMoveY = false;
 			    }
+			}
 	    	
 		    	// Unit has satisfied the movement criteria for both axes. -tb
 			    if (!Ycontinue && !Xcontinue){
@@ -220,8 +224,8 @@ game.Troop = me.Entity.extend({
 			    	this.needsMoveX = false;
 			    }
 	  		}
-	  	}
-	    else {
+	  	
+	    if (!this.needsMoveX && !this.needsMoveY) {
 	      this.body.vel.x = 0;
 	      this.body.vel.y = 0;
 	    }
