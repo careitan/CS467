@@ -1,7 +1,7 @@
 game.BasicProductionBuilding = me.Entity.extend({
 
     init : function() {
-		this.myBox = me.game.world.addChild(me.pool.pull("unitSelected"));
+		//this.myBox = me.game.world.addChild(me.pool.pull("unitSelected"));
 		this.clickpos = me.input.globalToLocal(0,0);
 		this.myTarget = null;
 		this.attacking = false;
@@ -19,7 +19,6 @@ game.BasicProductionBuilding = me.Entity.extend({
     	this.spawnUnit = null;
     	this.spawnTime = null;
     	this.maxSpawn = null;
-
    },
 
 /*
@@ -221,24 +220,23 @@ game.BasicProductionBuilding = me.Entity.extend({
 
 
     
-    spawnUnit : function(unitNameInPool, spawnTime, maxSpawnNumber, buildingX, buildingY) {
+    spawnUnit : function(unitNameInPool, spawnTime, maxSpawnNumber, buildingX, buildingY, teamColor, teamContainer) {
 
-    	console.log('my spawn unit will be '+unitNameInPool);
-    	console.log('my spawn time will be '+spawnTime);
-    	console.log('my max spawn will be '+maxSpawnNumber);
-    	console.log('spawn location is '+buildingX+', '+buildingY);
+    	// console.log('my spawn unit will be '+unitNameInPool);
+    	// console.log('my spawn time will be '+spawnTime);
+    	// console.log('my max spawn will be '+maxSpawnNumber);
+    	// console.log('spawn location is '+buildingX+', '+buildingY);
+
 
     	var id = me.timer.setInterval(function(){
     		var spawnCount = 0;
-    		me.game.world.forEach(function (child){
-    			if(child.name === unitNameInPool){
+    		teamContainer.forEach(function (child){
+    			if(child.name === unitNameInPool && child.team === teamColor){
     				spawnCount++;
     			}
     		})
-    		console.log('there are currently '+spawnCount+' '+unitNameInPool+'s!');
     		if(spawnCount < maxSpawnNumber){
-    			console.log('adding knight!');
-    			me.game.world.addChild(me.pool.pull(unitNameInPool, buildingX, buildingY));
+    			teamContainer.addUnitToContainer(unitNameInPool, buildingX, buildingY);
     		}
     	}, spawnTime, false);
 

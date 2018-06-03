@@ -1,7 +1,6 @@
 game.Troop = me.Entity.extend({
 
     init : function() {
-		this.myBox = me.game.world.addChild(me.pool.pull("unitSelected"));
 		this.clickpos = me.input.globalToLocal(0,0);
 		this.team = team;
 		this.myTarget = null;
@@ -12,6 +11,7 @@ game.Troop = me.Entity.extend({
 		this.engagedInCombat = false;
 		this.nextAttackTick = 999999999;
 		this.alwaysUpdate = true;
+		this.teamContainer = null;
    },
 
 
@@ -48,10 +48,10 @@ game.Troop = me.Entity.extend({
 
 		if (this.hp <= 0) {
 			this.alive = false;
-			me.game.world.removeChild(this.myBox);
-			me.game.world.removeChild(this);
+			this.teamContainer.removeChild(this.myBox);
+			this.teamContainer.removeChild(this);
 			var deadUnit = this;
-			me.game.world.forEach(function (child){
+			this.teamContainer.forEach(function (child){
 	   			if(child.type === 'armyUnit' && child.attacker === deadUnit){
 	   					child.attacker = null;
 	   					child.beingAttacked = false;
@@ -130,7 +130,7 @@ game.Troop = me.Entity.extend({
 	   		var myself = this;
 	   		// This is ugly and I'm sure there is a better way to pick a unit than spawning a 0x0 rect and seeing what overlaps it.
 	   		// But it is all I've been able to get to work so far. -tb
-			me.game.world.forEach(function (child){
+			this.teamContainer.otherTeamReference.forEach(function (child){
 	   			if(clickSpot.overlaps(child) && (child.type === 'armyUnit' || child.type ==='building') && (child != myself) && (child.team != myself.team)){
 	   					attackRegistered = true;
 	   					attackTarget = child;

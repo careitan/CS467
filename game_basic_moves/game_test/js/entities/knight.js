@@ -3,7 +3,7 @@ game.Knight = game.Troop.extend({
     /**
      * constructor
      */
-    init : function(x, y, team) {
+    init : function(x, y, team, teamContainer) {
         // call the constructor
         if (team === 'yellow') {
         	var image = me.loader.getImage("knight_yellow");
@@ -44,8 +44,9 @@ game.Knight = game.Troop.extend({
 		//console.log(this);
 
 		this.type = 'armyUnit';
-		this.myBox = me.game.world.addChild(me.pool.pull("unitSelected"));
-
+		this.teamContainer = teamContainer;
+		this.myBox = this.teamContainer.addChild(me.pool.pull("unitSelected"));
+		
 		// Unit Traits
 		this.hp = 20;
 		this.attack = 4;
@@ -58,6 +59,7 @@ game.Knight = game.Troop.extend({
 		//reset collision make smaller
 		this.body.removeShape(this.body.getShape(0));
 		this.body.addShape(new me.Rect(0,0,13,13));
+		this.teamContainer = teamContainer;
 		//this.anchorPoint.set(0.5, .5);
 		this.clickpos = me.input.globalToLocal(0,0);
 	}

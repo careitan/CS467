@@ -32,6 +32,7 @@ var game = {
         me.state.set(me.state.PLAY, new game.PlayScreen());
 
         // add our player entity in the entity pool
+        me.pool.register("teamContainer", game.teamContainer);
         me.pool.register("Knight", game.Knight);
         me.pool.register("Cavalry", game.Cavalry);
         me.pool.register("Archer", game.Archer);
@@ -39,6 +40,7 @@ var game = {
         me.pool.register("selectbox", game.selectbox);
         me.pool.register("unitSelected", game.unitSelected);
         me.pool.register("peasant", game.Peasant);
+        me.pool.register("castle", game.Castle);
         me.pool.register("barracks", game.Barracks);
 		me.pool.register("camera", game.Camera);
 		me.pool.register("goldmine", game.Goldmine);

@@ -3,14 +3,25 @@ game.Peasant = game.Troop.extend({
     /**
      * constructor
      */
-    init : function(x, y) {
+    init : function(x, y, team, teamContainer) {
+    	if (team === 'yellow') {
+        	var image = me.loader.getImage("peasant_yellow");
+        }
+        else if (team === 'blue') {
+        	var image = me.loader.getImage("peasant_blue");
+        }
+        else if (team === 'red') {
+        	var image = me.loader.getImage("peasant_red");
+        }
+        else if (team === 'green') {
+        	var image = me.loader.getImage("peasant_green");
+        }
         // call the constructor
-        var image = me.loader.getImage("peasant");
         this._super(me.Entity, 'init', [x, y, {
         	image: image,
         	width: 32,
         	height: 32}]);
-
+        this.team = team;
         this.name = "peasant";
 		this.renderable.flipX(true);
 		this.body.gravity = 0;
@@ -30,10 +41,9 @@ game.Peasant = game.Troop.extend({
 		this.selected = false;
 		this.mining = false;
 		this.miningId = null;
-		//console.log(this);
 
 		this.type = 'armyUnit';
-		this.myBox = me.game.world.addChild(me.pool.pull("unitSelected"));
+
 
 		// Unit Traits
 		this.hp = 15;
@@ -43,33 +53,55 @@ game.Peasant = game.Troop.extend({
 		this.armor = 0;
 
 		this.oneBarracksOnlyForNowUntilResourcesImplemented = false;
-		console.log('Select peasant and press B to build a barracks!');
 
 		//reset collision make smaller
 		this.body.removeShape(this.body.getShape(0));
 		this.body.addShape(new me.Rect(0,0,13,13));
+		this.teamContainer = teamContainer;
+		this.myBox = this.teamContainer.addChild(me.pool.pull("unitSelected"));
 		//this.anchorPoint.set(0.5, .5);
 		this.clickpos = me.input.globalToLocal(0,0);
+		this.goldmineHandle = null;
    },
 
     update : function (dt) {
     	if (this.selected === true && me.input.isKeyPressed('Bkey')) {
     		if(this.oneBarracksOnlyForNowUntilResourcesImplemented === false){
-    			me.game.world.addChild(me.pool.pull("barracks", this.pos.x+12, this.pos.y-100));
+    			me.game.world.addChild(me.pool.pull("barracks", this.pos.x+12, this.pos.y-100, this.team));
     			this.oneBarracksOnlyForNowUntilResourcesImplemented = true;
     		}
 	    }
+
+
+	    //gold mining checks
+    	if(this.mining === true && !(this.goldmineHandle.overlaps(this))){
+    		this.disableMining();
+    	}
+
 
     	//call regular troop update
     	this._super(game.Troop, 'update', [dt]);
     },
 
 
-    givePlayerGold : function(goldPerFiveSeconds) {
+    givePlayerGold : function(goldPerFiveSeconds, goldmineHandle) {
+    	this.goldmineHandle = goldmineHandle;
+    	var team = this.teamContainer;
+
     	var id = me.timer.setInterval(function(){
     		console.log('giving ' + goldPerFiveSeconds + ' gold!');
+    		team.gold += goldPerFiveSeconds;
     	}, 5000, false);
 
     	return id;
+    },
+
+
+    disableMining : function(){
+		console.log('mining disabled');
+		this.mining = false;
+		this.goldmineHandle = null;
+		me.timer.clearInterval(this.miningId);
+
     }
 });

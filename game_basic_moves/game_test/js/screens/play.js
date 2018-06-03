@@ -13,12 +13,18 @@ game.PlayScreen = me.ScreenObject.extend({
         game.selectbox = new game.selectbox();
 
 
-        // Add our HUD to the game world, add it last so that this is on top of the rest.
-        // Can also be forced by specifying a "Infinity" z value to the addChild function.
-        this.HUD = new game.HUD.Container();
-        me.game.world.addChild(this.HUD);
 
-        me.game.world.addChild(me.pool.pull("Knight", 0, 20, 'blue'));
+        var sb =me.game.world.addChild(me.pool.pull("selectbox"));
+        var gold1 = me.game.world.addChild(me.pool.pull("goldmine", 16, -12));
+        var gold2 = me.game.world.addChild(me.pool.pull("goldmine", 905, 510));
+
+        //****GET COLOR CHOSEN HERE****
+
+
+
+
+
+/*
         me.game.world.addChild(me.pool.pull("Knight", 50, 70, 'green'));
         me.game.world.addChild(me.pool.pull("Knight", 100, 120, 'red'));
         me.game.world.addChild(me.pool.pull("Knight", 150, 170, 'yellow'));
@@ -34,22 +40,11 @@ game.PlayScreen = me.ScreenObject.extend({
         me.game.world.addChild(me.pool.pull("Recruit", 200, 70, 'green'));
         me.game.world.addChild(me.pool.pull("Recruit", 250, 120, 'red'));
         me.game.world.addChild(me.pool.pull("Recruit", 300, 170, 'yellow'));
-        me.game.world.addChild(me.pool.pull("selectbox"));
-        me.game.world.addChild(me.pool.pull("unitSelected"));
-        me.game.world.addChild(me.pool.pull("peasant", 400, 400));
 		//me.game.world.addChild(me.pool.pull("barracks", 100, 350));
-		me.game.world.addChild(me.pool.pull("camera"));
-        me.game.world.addChild(me.pool.pull("goldmine",450, 450));
-
-
-
-/*
-        //bind arrow keys
-        me.input.bindKey(me.input.KEY.LEFT, 'left');
-        me.input.bindKey(me.input.KEY.RIGHT, 'right');
-        me.input.bindKey(me.input.KEY.UP, 'up');
-        me.input.bindKey(me.input.KEY.DOWN, 'down'); 
+		//me.game.world.addChild(me.pool.pull("camera"));
 */
+
+
 
         //bind clicks
         me.input.bindKey(me.input.KEY.M, 'leftclick'); 
@@ -58,6 +53,30 @@ game.PlayScreen = me.ScreenObject.extend({
 		me.input.bindPointer(me.input.pointer.RIGHT, me.input.KEY.A);
 		me.input.bindKey(me.input.KEY.B, 'Bkey');
         //me.input.registerPointerEvent('pointerdown', me.game.viewport, this.pointerDown.bind(this));
+
+
+
+        //Add PLAYER and AI containers
+        var player = me.game.world.addChild(me.pool.pull("teamContainer", "PLAYER", "blue"));
+        var ai = me.game.world.addChild(me.pool.pull("teamContainer", "AI", "red"));
+
+        player.initializeTeam();
+        ai.initializeTeam();
+
+        player.otherTeamReference = ai;
+        ai.otherTeamReference = player;
+
+        // Add our HUD to the game world, add it last so that this is on top of the rest.
+        // Can also be forced by specifying a "Infinity" z value to the addChild function.
+        this.HUD = new game.HUD.ScoreItem();
+        me.game.world.addChild(this.HUD);
+
+        //set handles to player container in relevant objs
+        this.setPlayerContainerHandle(sb, player);
+        this.setPlayerContainerHandle(gold1, player);
+        this.setPlayerContainerHandle(gold2, player);
+        this.setPlayerContainerHandle(this.HUD, player);
+
     },
 
     /**
@@ -66,6 +85,14 @@ game.PlayScreen = me.ScreenObject.extend({
     onDestroyEvent: function() {
         // remove the HUD from the game world
         me.game.world.removeChild(this.HUD);
+        me.game.world.forEach(function (child){
+        	me.game.world.removeChild(child);
+        })
+    },
+
+    //sets a handle to the player container in each object that will need it
+    setPlayerContainerHandle : function(child, playerContainer) {
+    	child.playerContainerHandle = playerContainer;
     }
 });
 

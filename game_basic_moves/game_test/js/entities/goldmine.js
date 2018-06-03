@@ -19,8 +19,8 @@ game.Goldmine = game.BasicProductionBuilding.extend({
 
 		//reset collision make smaller
 		this.body.removeShape(this.body.getShape(0));
-		this.body.addShape(new me.Rect(0,0,64,64));
-		this.body.getShape(0).translate(0,0);
+		this.body.addShape(new me.Rect(0,0,40,40));
+		this.body.getShape(0).translate(0,20);
 
 		//this.spawnId = this._super(game.BasicProductionBuilding, 'spawnUnit', ['testKnight', 3000, 10, this.pos.x, this.pos.y]);
 		//console.log(this.spawnId);
@@ -30,21 +30,20 @@ game.Goldmine = game.BasicProductionBuilding.extend({
 
     update : function (dt) {
     	var gmine = this;
-		me.game.world.forEach(function (child){
+
+    	if(this.playerContainerHandle === undefined){
+    		return false;
+    	}
+
+		this.playerContainerHandle.forEach(function (child){
    			if(child.name === 'peasant'){
    				if(gmine.overlaps(child)){
 	   				if(child.mining === false){
 		   				child.mining = true;
-		   				console.log('peasant mining +1 gold!');
-		   				child.miningId = child.givePlayerGold(1);
+		   				console.log('peasant mining +2 gold!');
+		   				child.miningId = child.givePlayerGold(2, gmine);
 		   			}
 		   		}
-		   		else{
-		   			if(child.mining === true){
-		   				child.mining = false;
-		   				me.timer.clearInterval(child.miningId);
-		   			}
-	   			}
    			}
    		})
 		
@@ -53,6 +52,8 @@ game.Goldmine = game.BasicProductionBuilding.extend({
 
     	return false;
     },
+
+
 
 
 

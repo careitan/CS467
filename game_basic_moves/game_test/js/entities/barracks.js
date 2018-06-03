@@ -3,9 +3,20 @@ game.Barracks = game.BasicProductionBuilding.extend({
     /**
      * constructor
      */
-    init : function(x, y) {
+    init : function(x, y, team, teamContainer) {
+    	if (team === 'yellow') {
+        	var image = me.loader.getImage("barracks_yellow");
+        }
+        else if (team === 'blue') {
+        	var image = me.loader.getImage("barracks_blue");
+        }
+        else if (team === 'red') {
+        	var image = me.loader.getImage("barracks_red");
+        }
+        else if (team === 'green') {
+        	var image = me.loader.getImage("barracks_green");
+        }
         // call the constructor
-        var image = me.loader.getImage("barracks");
         this._super(me.Entity, 'init', [x, y, {
         	image: image,
         	width: 128,
@@ -21,14 +32,13 @@ game.Barracks = game.BasicProductionBuilding.extend({
 
 		this.armor = 0;
 
-		console.log('barracks init');
 		
 
 		//reset collision make smaller
 		this.body.removeShape(this.body.getShape(0));
 		this.body.addShape(new me.Rect(0,0,128,93));
 		this.body.getShape(0).translate(0,20);
-		
+		this.teamContainer = teamContainer;
 		
 	//***FIX - temp disable spawning while units etc. being finalized ***
 	//	this.spawnId = this._super(game.BasicProductionBuilding, 'spawnUnit', ['Knight', 3000, 10, this.pos.x, this.pos.y]);
