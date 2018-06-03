@@ -1,20 +1,20 @@
-game.Barracks = game.BasicProductionBuilding.extend({
+game.Stables = game.BasicProductionBuilding.extend({
 
     /**
      * constructor
      */
     init : function(x, y, team, teamContainer) {
     	if (team === 'yellow') {
-        	var image = me.loader.getImage("barracks_yellow");
+        	var image = me.loader.getImage("stables_yellow");
         }
         else if (team === 'blue') {
-        	var image = me.loader.getImage("barracks_blue");
+        	var image = me.loader.getImage("stables_blue");
         }
         else if (team === 'red') {
-        	var image = me.loader.getImage("barracks_red");
+        	var image = me.loader.getImage("stables_red");
         }
         else if (team === 'green') {
-        	var image = me.loader.getImage("barracks_green");
+        	var image = me.loader.getImage("stables_green");
         }
         // call the constructor
         this._super(me.Entity, 'init', [x, y, {
@@ -22,7 +22,7 @@ game.Barracks = game.BasicProductionBuilding.extend({
         	width: 128,
         	height: 128}]);
 
-        this.name = "barracks";
+        this.name = "stables";
         this.type = 'building';
 
 		// Unit Traits
@@ -40,10 +40,10 @@ game.Barracks = game.BasicProductionBuilding.extend({
 		this.body.getShape(0).translate(0,20);
 		this.team = team;
 		this.teamContainer = teamContainer;
-		this.teamContainer.numBarracks++;
+		this.teamContainer.numStables++;
 
-		this.spawnId = this._super(game.BasicProductionBuilding, 'spawnUnit', ['Knight', 10000, 8*this.teamContainer.numBarracks, 
-																				this.pos.x, this.pos.y, this.team, this.teamContainer, "numBarracks"]);
+		this.spawnId = this._super(game.BasicProductionBuilding, 'spawnUnit', ['Cavalry', 10000, 8*this.teamContainer.numStables, 
+																				this.pos.x, this.pos.y, this.team, this.teamContainer, "numStables"]);
    },
 
 
@@ -56,7 +56,7 @@ game.Barracks = game.BasicProductionBuilding.extend({
 			//stop spawning units since the building is dead
 			me.timer.clearInterval(this.spawnId);
 			this.teamContainer.removeChild(this);
-			this.teamContainer.numBarracks--;
+			this.teamContainer.numStables--;
 			var deadUnit = this;
 			this.teamContainer.forEach(function (child){
 	   			if(child.type === 'armyUnit' && child.attacker === deadUnit){

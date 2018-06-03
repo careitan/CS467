@@ -40,7 +40,7 @@ game.Goldmine = game.BasicProductionBuilding.extend({
    				if(gmine.overlaps(child)){
 	   				if(child.mining === false){
 		   				child.mining = true;
-		   				console.log('peasant mining +2 gold!');
+		   				//console.log('peasant mining +2 gold!');
 		   				child.miningId = child.givePlayerGold(2, gmine);
 		   			}
 		   		}

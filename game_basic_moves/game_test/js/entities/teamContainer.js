@@ -7,6 +7,11 @@ game.teamContainer = me.Container.extend({
 		this.team = team;
 		this.gold = 50;
 		this.otherTeamReference = null;
+		this.numBarracks = 0;
+		this.numTavern = 0;
+		this.numCastle = 0;
+		this.numRange = 0;
+		this.numStables = 0;
 		//this.army = [];
 		//this.peasants = [];
 		if(PLAYER_OR_AI === "PLAYER"){

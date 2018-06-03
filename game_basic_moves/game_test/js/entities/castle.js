@@ -38,7 +38,11 @@ game.Castle = game.BasicProductionBuilding.extend({
 		this.body.addShape(new me.Rect(0,0,128,93));
 		this.body.getShape(0).translate(0,20);
 		this.teamContainer = teamContainer;
-		this.spawnId = this._super(game.BasicProductionBuilding, 'spawnUnit', ['peasant', 10000, 8, this.pos.x, this.pos.y, this.team, this.teamContainer]);
+		this.teamContainer.numCastle++;
+		this.spawnId = this._super(game.BasicProductionBuilding, 'spawnUnit', ['peasant', 10000, 8, 
+																				this.pos.x, this.pos.y, 
+																				this.team, this.teamContainer, 
+																				"numCastle"]);
    },
 
 
@@ -51,6 +55,7 @@ game.Castle = game.BasicProductionBuilding.extend({
 			//stop spawning units since the building is dead
 			me.timer.clearInterval(this.spawnId);
 			this.teamContainer.removeChild(this);
+			this.teamContainer.numCastle--;
 			var deadUnit = this;
 			this.teamContainer.forEach(function (child){
 	   			if(child.type === 'armyUnit' && child.attacker === deadUnit){
@@ -59,7 +64,14 @@ game.Castle = game.BasicProductionBuilding.extend({
 	   					child.engaged = false;
 	   			}
 	   		})
-			
+			//SPECIAL CONDITION: end game when castle is destroyed
+			if(this.teamContainer.name === "playerContainer"){
+				me.game.world.endState = "DEFEAT";
+			}
+			else{
+				me.game.world.endState = "VICTORY";
+			}
+			me.state.change(me.state.GAMEOVER);
 		}
 
     	return true;

@@ -130,8 +130,9 @@ game.Troop = me.Entity.extend({
 	   		var myself = this;
 	   		// This is ugly and I'm sure there is a better way to pick a unit than spawning a 0x0 rect and seeing what overlaps it.
 	   		// But it is all I've been able to get to work so far. -tb
+	   		// note: commented out team check below for now, since the new containers will only iterate over the enemy
 			this.teamContainer.otherTeamReference.forEach(function (child){
-	   			if(clickSpot.overlaps(child) && (child.type === 'armyUnit' || child.type ==='building') && (child != myself) && (child.team != myself.team)){
+	   			if(clickSpot.overlaps(child) && (child.type === 'armyUnit' || child.type ==='building') ){//&& (child != myself) && (child.team != myself.team)){
 	   					attackRegistered = true;
 	   					attackTarget = child;
 	   			}

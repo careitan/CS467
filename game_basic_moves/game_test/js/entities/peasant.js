@@ -52,7 +52,7 @@ game.Peasant = game.Troop.extend({
 		this.body.setVelocity(1, 1);
 		this.armor = 0;
 
-		this.oneBarracksOnlyForNowUntilResourcesImplemented = false;
+		this.lastBuildTimestamp = 0;
 
 		//reset collision make smaller
 		this.body.removeShape(this.body.getShape(0));
@@ -66,9 +66,31 @@ game.Peasant = game.Troop.extend({
 
     update : function (dt) {
     	if (this.selected === true && me.input.isKeyPressed('Bkey')) {
-    		if(this.oneBarracksOnlyForNowUntilResourcesImplemented === false){
-    			me.game.world.addChild(me.pool.pull("barracks", this.pos.x+12, this.pos.y-100, this.team));
-    			this.oneBarracksOnlyForNowUntilResourcesImplemented = true;
+    		var okToBuild = this.checkBuildTimeout();
+    		if(this.teamContainer.gold >= 150 && okToBuild){
+    			this.teamContainer.addChild(me.pool.pull("barracks", this.pos.x+12, this.pos.y-100, this.team, this.teamContainer));
+    			this.teamContainer.gold -= 150;
+    		}
+	    }
+	    else if (this.selected === true && me.input.isKeyPressed('Tkey')) {
+	    	var okToBuild = this.checkBuildTimeout();
+    		if(this.teamContainer.gold >= 100 && okToBuild){
+    			this.teamContainer.addChild(me.pool.pull("tavern", this.pos.x+12, this.pos.y-100, this.team, this.teamContainer));
+    			this.teamContainer.gold -= 100;
+    		}
+	    }
+	    else if (this.selected === true && me.input.isKeyPressed('Rkey')) {
+	    	var okToBuild = this.checkBuildTimeout();
+    		if(this.teamContainer.gold >= 200 && okToBuild){
+    			this.teamContainer.addChild(me.pool.pull("range", this.pos.x+12, this.pos.y-100, this.team, this.teamContainer));
+    			this.teamContainer.gold -= 200;
+    		}
+	    }
+	    else if (this.selected === true && me.input.isKeyPressed('Hkey')) {
+			var okToBuild = this.checkBuildTimeout();
+    		if(this.teamContainer.gold >= 250 && okToBuild){
+    			this.teamContainer.addChild(me.pool.pull("stables", this.pos.x+12, this.pos.y-100, this.team, this.teamContainer));
+    			this.teamContainer.gold -= 250;
     		}
 	    }
 
@@ -89,7 +111,7 @@ game.Peasant = game.Troop.extend({
     	var team = this.teamContainer;
 
     	var id = me.timer.setInterval(function(){
-    		console.log('giving ' + goldPerFiveSeconds + ' gold!');
+    		//console.log('giving ' + goldPerFiveSeconds + ' gold!');
     		team.gold += goldPerFiveSeconds;
     	}, 5000, false);
 
@@ -98,10 +120,25 @@ game.Peasant = game.Troop.extend({
 
 
     disableMining : function(){
-		console.log('mining disabled');
+		//console.log('mining disabled');
 		this.mining = false;
 		this.goldmineHandle = null;
 		me.timer.clearInterval(this.miningId);
 
+    },
+
+    //'hack' to prevent accidentally building multiple buildings stacked on each other if enough gold for multiple
+    checkBuildTimeout : function(){
+    	var date = new Date();
+		var timestamp = date.getTime();
+    	var timeSinceLastBuild = timestamp - this.lastBuildTimestamp;
+    	//3 second cooldown after building
+    	if(timeSinceLastBuild > 3000){
+    		this.lastBuildTimestamp = timestamp;
+    		return true;
+    	}
+    	else{
+    		return false;
+    	}
     }
 });

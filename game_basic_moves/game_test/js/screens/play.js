@@ -6,45 +6,14 @@ game.PlayScreen = me.ScreenObject.extend({
 
 		me.levelDirector.loadLevel("map");
 
-        // reset the score
-        game.data.score = 0;
-        
-
         game.selectbox = new game.selectbox();
-
-
 
         var sb =me.game.world.addChild(me.pool.pull("selectbox"));
         var gold1 = me.game.world.addChild(me.pool.pull("goldmine", 16, -12));
         var gold2 = me.game.world.addChild(me.pool.pull("goldmine", 905, 510));
 
-        //****GET COLOR CHOSEN HERE****
 
-
-
-
-
-/*
-        me.game.world.addChild(me.pool.pull("Knight", 50, 70, 'green'));
-        me.game.world.addChild(me.pool.pull("Knight", 100, 120, 'red'));
-        me.game.world.addChild(me.pool.pull("Knight", 150, 170, 'yellow'));
-        me.game.world.addChild(me.pool.pull("Archer", 50, 20, 'blue'));
-        me.game.world.addChild(me.pool.pull("Archer", 100, 70, 'green'));
-        me.game.world.addChild(me.pool.pull("Archer", 150, 120, 'red'));
-        me.game.world.addChild(me.pool.pull("Archer", 200, 170, 'yellow'));
-        me.game.world.addChild(me.pool.pull("Cavalry", 100, 20, 'blue'));
-        me.game.world.addChild(me.pool.pull("Cavalry", 150, 70, 'green'));
-        me.game.world.addChild(me.pool.pull("Cavalry", 200, 120, 'red'));
-        me.game.world.addChild(me.pool.pull("Cavalry", 250, 170, 'yellow'));
-        me.game.world.addChild(me.pool.pull("Recruit", 150, 20, 'blue'));
-        me.game.world.addChild(me.pool.pull("Recruit", 200, 70, 'green'));
-        me.game.world.addChild(me.pool.pull("Recruit", 250, 120, 'red'));
-        me.game.world.addChild(me.pool.pull("Recruit", 300, 170, 'yellow'));
-		//me.game.world.addChild(me.pool.pull("barracks", 100, 350));
 		//me.game.world.addChild(me.pool.pull("camera"));
-*/
-
-
 
         //bind clicks
         me.input.bindKey(me.input.KEY.M, 'leftclick'); 
@@ -52,6 +21,9 @@ game.PlayScreen = me.ScreenObject.extend({
 		me.input.bindKey(me.input.KEY.A, 'rightclick');
 		me.input.bindPointer(me.input.pointer.RIGHT, me.input.KEY.A);
 		me.input.bindKey(me.input.KEY.B, 'Bkey');
+		me.input.bindKey(me.input.KEY.T, 'Tkey');
+		me.input.bindKey(me.input.KEY.R, 'Rkey');
+		me.input.bindKey(me.input.KEY.H, 'Hkey');
         //me.input.registerPointerEvent('pointerdown', me.game.viewport, this.pointerDown.bind(this));
 
 
