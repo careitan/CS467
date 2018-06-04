@@ -52,7 +52,8 @@ game.PlayScreen = me.ScreenObject.extend({
         this.setAiContainerHandle(gold2, ai);
         this.setPlayerContainerHandle(this.HUD, player);
 
-
+        // console.log(player.gold);
+        // console.log(ai.gold);
 		//console.log('started game w/ ai difficulty set to '+me.game.world.AI_DIFFICULTY);
 		//console.log("previous cookie is "+ JSON.stringify(document.cookie));
 		this.refreshCookie(player,ai);
@@ -82,20 +83,15 @@ game.PlayScreen = me.ScreenObject.extend({
     //refreshes cookie to store current game state every 10 seconds
     refreshCookie : function(player, ai) {
 		me.timer.setInterval(function(){
-
-    		// teamContainer.forEach(function (child){
-    		// 	if(child.name === unitNameInPool && child.team === teamColor){
-    		// 		spawnCount++;
-    		// 		//console.log('counted ' + spawnCount + ' ' + unitNameInPool);
-    		// 	}
-    		// })
-
     		//clear all previous cookies 
     		clearAllCookies();
+
     		document.cookie = "aidifficulty="+me.game.world.AI_DIFFICULTY+";";
     		document.cookie = "playergold="+player.gold+";";
     		document.cookie = "aigold="+ai.gold+";";
-    		console.log('ai gold is '+ai.gold);
+
+    		saveAllBuildings(player, ai);
+    		saveAllUnits(player, ai);
     	}, 10000, false);
     },
 
@@ -110,6 +106,102 @@ function clearAllCookies(){
 		 document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
 	 });
 }
+
+
+function saveAllBuildings(player, ai){
+	var playerBuildingNum = 1;
+	var playerCookieName = "playerbldg";
+
+	player.forEach(function (child){
+		if(child.type === "building"){
+			var bldgCookie = playerCookieName+playerBuildingNum+"=";
+			bldgCookie += child.name;
+			bldgCookie += "/"
+			bldgCookie += child.hp;
+			bldgCookie += "/"			
+			bldgCookie += child.pos.x;
+			bldgCookie += "/"			
+			bldgCookie += child.pos.y;
+			bldgCookie += ";"
+
+			//example format:
+			//playerbldg1=castle/15/123/456;
+			document.cookie = bldgCookie;
+			//increment number to differentiate next bldg 
+			//in case there are multiple with the same name
+			playerBuildingNum++;
+		}
+	})
+
+	var aiBuildingNum = 1;
+	var aiCookieName = "aibldg";
+	ai.forEach(function (child){
+		if(child.type === "building"){
+			var bldgCookie = aiCookieName+aiBuildingNum+"=";
+			bldgCookie += child.name;
+			bldgCookie += "/"
+			bldgCookie += child.hp;
+			bldgCookie += "/"			
+			bldgCookie += child.pos.x;
+			bldgCookie += "/"			
+			bldgCookie += child.pos.y;
+			bldgCookie += ";"
+			document.cookie = bldgCookie;
+			//increment number to differentiate next bldg 
+			//in case there are multiple with the same name
+			aiBuildingNum++;
+		}
+	})
+}
+
+
+
+function saveAllUnits(player, ai){
+	var playerUnitNum = 1;
+	var playerCookieName = "playerunit";
+
+	player.forEach(function (child){
+		if(child.type === "armyUnit"){
+			var unitCookie = playerCookieName+playerUnitNum+"=";
+			unitCookie += child.name;
+			unitCookie += "/"
+			unitCookie += child.hp;
+			unitCookie += "/"			
+			unitCookie += child.pos.x;
+			unitCookie += "/"			
+			unitCookie += child.pos.y;
+			unitCookie += ";"
+
+			//example format:
+			//playerunit1=peasant/15/123/456;
+			document.cookie = unitCookie;
+			//increment number to differentiate next unit 
+			//in case there are multiple with the same name
+			playerUnitNum++;
+		}
+	})
+
+	var aiUnitNum = 1;
+	var aiCookieName = "aiunit";
+	ai.forEach(function (child){
+		if(child.type === "armyUnit"){
+			var unitCookie = aiCookieName+aiUnitNum+"=";
+			unitCookie += child.name;
+			unitCookie += "/"
+			unitCookie += child.hp;
+			unitCookie += "/"			
+			unitCookie += child.pos.x;
+			unitCookie += "/"			
+			unitCookie += child.pos.y;
+			unitCookie += ";"
+			document.cookie = unitCookie;
+			//increment number to differentiate next unit
+			//in case there are multiple with the same name
+			aiUnitNum++;
+		}
+	})
+}
+
 
 
 //prevent default right-click menu from popping up
