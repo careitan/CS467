@@ -8,7 +8,6 @@ game.GameOverScreen = me.ScreenObject.extend({
 
 
     	me.game.world.addChild(new me.ColorLayer("background", "#000000"), 1);
-	    //this.font.draw(me.renderer, me.game.world.endState, 230, 140);
 
 
 

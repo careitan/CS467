@@ -21,7 +21,7 @@ var game = {
 
     // Run on game resources loaded.
     "loaded" : function () {
-        //me.state.set(me.state.MENU, new game.TitleScreen());
+        me.state.set(me.state.MENU, new game.TitleScreen());
         me.state.set(me.state.PLAY, new game.PlayScreen());
         me.state.set(me.state.GAMEOVER, new game.GameOverScreen());
 
@@ -47,8 +47,8 @@ var game = {
         me.debug.renderHitBox = true
 
 
-        // Start the game.
-        me.state.change(me.state.PLAY);
+        // Start with title screen
+        me.state.change(me.state.MENU);
 
 
 

@@ -49,6 +49,8 @@ game.PlayScreen = me.ScreenObject.extend({
         this.setPlayerContainerHandle(gold2, player);
         this.setPlayerContainerHandle(this.HUD, player);
 
+
+		console.log('started game w/ ai difficulty set to '+me.game.world.AI_DIFFICULTY);
     },
 
     /**
