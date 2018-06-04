@@ -24,6 +24,7 @@ game.TitleScreen = me.ScreenObject.extend({
 			      this._super(me.GUI_Object, "init", [480, 250, settings]);
 			      // define the object z order
 			      this.pos.z = 0;
+			      me.game.world.LOAD_FROM_COOKIE = false;
 			   },
 
 		    onClick : function (event) {
@@ -53,7 +54,7 @@ game.TitleScreen = me.ScreenObject.extend({
 		    	me.game.world.AI_DIFFICULTY = "EASY";
 		    	this.setAnimationFrame(1);
 		    	ai_hard_btn.setAnimationFrame(0);
-		    	console.log('ai difficulty set to '+me.game.world.AI_DIFFICULTY);
+		    	//console.log('ai difficulty set to '+me.game.world.AI_DIFFICULTY);
 		        return false;
 		    }
 		}));
@@ -76,7 +77,7 @@ game.TitleScreen = me.ScreenObject.extend({
 		    	me.game.world.AI_DIFFICULTY = "HARD";
 		    	this.setAnimationFrame(1);
 		    	ai_easy_btn.setAnimationFrame(0);
-				console.log('ai difficulty set to '+me.game.world.AI_DIFFICULTY);
+				//console.log('ai difficulty set to '+me.game.world.AI_DIFFICULTY);
 		        return false;
 		    }
 		}));
@@ -96,8 +97,8 @@ game.TitleScreen = me.ScreenObject.extend({
 
 		    onClick : function (event) {
 		        // Change to the PLAY state when the button is clicked
-		        console.log('loadin saved game');
-		        //me.state.change(me.state.PLAY);
+		        me.game.world.LOAD_FROM_COOKIE = true;
+		        me.state.change(me.state.PLAY);
 		        return false;
 		    }
 		}));

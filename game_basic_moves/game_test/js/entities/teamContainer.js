@@ -20,6 +20,11 @@ game.teamContainer = me.Container.extend({
 		else if(PLAYER_OR_AI === "AI"){
 			this.name = "aiContainer";
 		}
+
+		if(me.game.world.LOAD_FROM_COOKIE){
+			console.log("LOAD_FROM_COOKIE INIT ACTIVATED");
+			this.loadFromCookie();
+		}
 		
    },
 
@@ -47,6 +52,11 @@ game.teamContainer = me.Container.extend({
    		var unit = me.pool.pull(unitName, x, y, this.team, this);
    		this.addChild(unit);  
    		unit.teamContainer = this;
+   },
+
+   loadFromCookie : function() {
+   		//take cookie apart; split into unit, building functions; else gold or ai difficulty
+   		console.log('loadin from cooki');
    },
 
 

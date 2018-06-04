@@ -32,8 +32,9 @@ game.PlayScreen = me.ScreenObject.extend({
         var player = me.game.world.addChild(me.pool.pull("teamContainer", "PLAYER", "blue"));
         var ai = me.game.world.addChild(me.pool.pull("teamContainer", "AI", "red"));
 
-        player.initializeTeam();
-        ai.initializeTeam();
+    	player.initializeTeam();
+    	ai.initializeTeam();
+		
 
         player.otherTeamReference = ai;
         ai.otherTeamReference = player;
@@ -47,10 +48,14 @@ game.PlayScreen = me.ScreenObject.extend({
         this.setPlayerContainerHandle(sb, player);
         this.setPlayerContainerHandle(gold1, player);
         this.setPlayerContainerHandle(gold2, player);
+        this.setAiContainerHandle(gold1, ai);
+        this.setAiContainerHandle(gold2, ai);
         this.setPlayerContainerHandle(this.HUD, player);
 
 
-		console.log('started game w/ ai difficulty set to '+me.game.world.AI_DIFFICULTY);
+		//console.log('started game w/ ai difficulty set to '+me.game.world.AI_DIFFICULTY);
+		//console.log("previous cookie is "+ JSON.stringify(document.cookie));
+		this.refreshCookie(player,ai);
     },
 
     /**
@@ -67,9 +72,44 @@ game.PlayScreen = me.ScreenObject.extend({
     //sets a handle to the player container in each object that will need it
     setPlayerContainerHandle : function(child, playerContainer) {
     	child.playerContainerHandle = playerContainer;
-    }
+    },
+
+    //sets a handle to the ai container in each object that will need it
+    setAiContainerHandle : function(child, aiContainer) {
+    	child.aiContainerHandle = aiContainer;
+    },
+
+    //refreshes cookie to store current game state every 10 seconds
+    refreshCookie : function(player, ai) {
+		me.timer.setInterval(function(){
+
+    		// teamContainer.forEach(function (child){
+    		// 	if(child.name === unitNameInPool && child.team === teamColor){
+    		// 		spawnCount++;
+    		// 		//console.log('counted ' + spawnCount + ' ' + unitNameInPool);
+    		// 	}
+    		// })
+
+    		//clear all previous cookies 
+    		clearAllCookies();
+    		document.cookie = "aidifficulty="+me.game.world.AI_DIFFICULTY+";";
+    		document.cookie = "playergold="+player.gold+";";
+    		document.cookie = "aigold="+ai.gold+";";
+    		console.log('ai gold is '+ai.gold);
+    	}, 10000, false);
+    },
+
+
 });
 
+
+//clear all cookies
+//source : https://stackoverflow.com/questions/179355/clearing-all-cookies-with-javascript
+function clearAllCookies(){
+	document.cookie.split(";").forEach(function(c) {
+		 document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+	 });
+}
 
 
 //prevent default right-click menu from popping up
