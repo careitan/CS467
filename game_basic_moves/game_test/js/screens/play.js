@@ -8,7 +8,7 @@ game.PlayScreen = me.ScreenObject.extend({
 
         game.selectbox = new game.selectbox();
 
-        var sb =me.game.world.addChild(me.pool.pull("selectbox"));
+        var sb = me.game.world.addChild(me.pool.pull("selectbox"));
         var gold1 = me.game.world.addChild(me.pool.pull("goldmine", 16, -12));
         var gold2 = me.game.world.addChild(me.pool.pull("goldmine", 905, 510));
 
