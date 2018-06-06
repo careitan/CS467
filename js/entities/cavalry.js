@@ -3,15 +3,27 @@ game.Cavalry = game.Troop.extend({
     /**
      * constructor
      */
-    init : function(x, y) {
+    init : function(x, y, team) {
         // call the constructor
-        var image = me.loader.getImage("cavalry");
+        if (team === 'blue') {
+        	var image = me.loader.getImage("cavalry_blue");
+        }
+        else if (team === 'green') {
+        	var image = me.loader.getImage("cavalry_green");
+        }
+        else if (team === 'red') {
+        	var image = me.loader.getImage("cavalry_red");
+        }
+        else if (team === 'yellow') {
+        	var image = me.loader.getImage("cavalry_yellow");
+        }
         this._super(me.Entity, 'init', [x, y, {
         	image: image,
         	width: 32,
         	height: 32}]);
 
-        this.name = "testCavalry";
+		this.team = team;
+        this.name = "Cavalry";
 		this.renderable.flipX(true);
 		this.body.gravity = 0;
 		//this.floating = true;
@@ -33,13 +45,12 @@ game.Cavalry = game.Troop.extend({
 
 		this.type = 'armyUnit';
 		this.myBox = me.game.world.addChild(me.pool.pull("unitSelected"));
-		this.attacking = false;
 
 		// Unit Traits
 		this.hp = 15;
 		this.attack = 3;
 		this.attackType = "melee";
-		this.body.setVelocity(1.5, 1.5);
+		this.body.setVelocity(1, 1);
 		this.armor = 0;
 
 
@@ -47,5 +58,7 @@ game.Cavalry = game.Troop.extend({
 		//reset collision make smaller
 		this.body.removeShape(this.body.getShape(0));
 		this.body.addShape(new me.Rect(0,0,13,13));
+		this.body.updateBounds();
 		//this.anchorPoint.set(0.5, .5);
+		this.clickpos = me.input.globalToLocal(0,0);
    }});

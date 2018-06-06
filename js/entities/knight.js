@@ -3,15 +3,27 @@ game.Knight = game.Troop.extend({
     /**
      * constructor
      */
-    init : function(x, y) {
+    init : function(x, y, team, teamContainer) {
         // call the constructor
-        var image = me.loader.getImage("knight");
+        if (team === 'yellow') {
+        	var image = me.loader.getImage("knight_yellow");
+        }
+        else if (team === 'blue') {
+        	var image = me.loader.getImage("knight_blue");
+        }
+        else if (team === 'red') {
+        	var image = me.loader.getImage("knight_red");
+        }
+        else if (team === 'green') {
+        	var image = me.loader.getImage("knight_green");
+        }
         this._super(me.Entity, 'init', [x, y, {
         	image: image,
         	width: 32,
         	height: 32}]);
 
-        this.name = "testKnight";
+		this.team = team;
+        this.name = "Knight";
 		this.renderable.flipX(true);
 		this.body.gravity = 0;
 		//this.floating = true;
@@ -32,14 +44,14 @@ game.Knight = game.Troop.extend({
 		//console.log(this);
 
 		this.type = 'armyUnit';
-		this.myBox = me.game.world.addChild(me.pool.pull("unitSelected"));
-		this.attacking = false;
-
+		this.teamContainer = teamContainer;
+		this.myBox = this.teamContainer.addChild(me.pool.pull("unitSelected"));
+		
 		// Unit Traits
-		this.hp = 15;
-		this.attack = 3;
+		this.hp = 20;
+		this.attack = 4;
 		this.attackType = "melee";
-		this.body.setVelocity(1, 1);
+		this.body.setVelocity(.8, .8);
 		this.armor = 0;
 
 
@@ -47,5 +59,9 @@ game.Knight = game.Troop.extend({
 		//reset collision make smaller
 		this.body.removeShape(this.body.getShape(0));
 		this.body.addShape(new me.Rect(0,0,13,13));
+		this.body.updateBounds();
+		this.teamContainer = teamContainer;
 		//this.anchorPoint.set(0.5, .5);
-   }});
+		this.clickpos = me.input.globalToLocal(0,0);
+	}
+});

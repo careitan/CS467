@@ -1,21 +1,21 @@
-game.Archer = game.Troop.extend({
+game.Recruit = game.Troop.extend({
 
     /**
      * constructor
      */
     init : function(x, y, team) {
         // call the constructor
-        if (team === 'blue') {
-        	var image = me.loader.getImage("archer_blue");
+        if (team === 'yellow') {
+        	var image = me.loader.getImage("recruit_yellow");
         }
-        else if (team === 'green') {
-        	var image = me.loader.getImage("archer_green");
+        else if (team === 'blue') {
+        	var image = me.loader.getImage("recruit_blue");
         }
         else if (team === 'red') {
-        	var image = me.loader.getImage("archer_red");
+        	var image = me.loader.getImage("recruit_red");
         }
-        else if (team === 'yellow') {
-        	var image = me.loader.getImage("archer_yellow");
+        else if (team === 'green') {
+        	var image = me.loader.getImage("recruit_green");
         }
         this._super(me.Entity, 'init', [x, y, {
         	image: image,
@@ -23,7 +23,7 @@ game.Archer = game.Troop.extend({
         	height: 32}]);
 
 		this.team = team;
-        this.name = "Archer";
+        this.name = "Recruit";
 		this.renderable.flipX(true);
 		this.body.gravity = 0;
 		//this.floating = true;
@@ -47,11 +47,10 @@ game.Archer = game.Troop.extend({
 		this.myBox = me.game.world.addChild(me.pool.pull("unitSelected"));
 
 		// Unit Traits
-		this.hp = 15;
-		this.attack = 2;
-		this.attackType = "ranged";
-		this.attackRange = 200;
-		this.body.setVelocity(.5, .5);
+		this.hp = 20;
+		this.attack = 3;
+		this.attackType = "melee";
+		this.body.setVelocity(.8, .8);
 		this.armor = 0;
 
 
@@ -62,4 +61,5 @@ game.Archer = game.Troop.extend({
 		this.body.updateBounds();
 		//this.anchorPoint.set(0.5, .5);
 		this.clickpos = me.input.globalToLocal(0,0);
-   }});
+	}
+});

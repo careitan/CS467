@@ -14,7 +14,7 @@ game.Villain = game.Troop.extend({
         this.name = "testVillain";
 		this.renderable.flipX(true);
 		this.body.gravity = 0;
-		console.log("VILLAIN COMIN");
+		//console.log("VILLAIN COMIN");
 		this.body.setVelocity(1, 1);
 		this.body.collisionType = me.collision.types.ENEMY_OBJECT;
 		this.alwaysUpdate = true;
@@ -33,7 +33,6 @@ game.Villain = game.Troop.extend({
 
 		this.type = 'armyUnit';
 		this.myBox = me.game.world.addChild(me.pool.pull("unitSelected"));
-		this.attacking = false;
 
 		// Unit Traits
 		this.hp = 15;
@@ -47,4 +46,5 @@ game.Villain = game.Troop.extend({
 		this.body.removeShape(this.body.getShape(0));
 		this.body.addShape(new me.Rect(0,0,13,13));
 		//this.anchorPoint.set(0.5, .5);
+		this.clickpos = me.input.globalToLocal(0,0);
    }});
