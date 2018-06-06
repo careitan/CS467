@@ -441,7 +441,7 @@ game.Troop = me.Entity.extend({
 			}
 		
 
-		/*
+		
 		//for ai: automatically attack anything colliding with
 		if((response.a.type === 'armyUnit' && response.a.teamContainer.PLAYER_OR_AI === 'AI')
 			 && ((response.b.type === 'armyUnit' || response.b.type === 'building') && response.b.teamContainer.PLAYER_OR_AI === 'PLAYER')){
@@ -455,7 +455,7 @@ game.Troop = me.Entity.extend({
 			response.b.myTarget = response.b;
 			response.b.attacker = response.a;
 		}
-		*/
+		
 
 
 

@@ -84,10 +84,10 @@ game.teamContainer = me.Container.extend({
 	   			var peasant2 = this.addUnitToContainer("peasant", 90, 155);
 	   			var peasant3 = this.addUnitToContainer("peasant", 120, 155);
 	   			var peasant4 = this.addUnitToContainer("peasant", 150, 155);
-	   			this.aiMoveUnit(peasant1, 12, -8);
-	   			this.aiMoveUnit(peasant2, 14, 0);
-	   			this.aiMoveUnit(peasant3, 34, -12);
-	   			this.aiMoveUnit(peasant4, 44, -12);
+	   			this.aiMoveUnit(peasant1, 22, 2);
+	   			this.aiMoveUnit(peasant2, 22, 2);
+	   			this.aiMoveUnit(peasant3, 42, 2);
+	   			this.aiMoveUnit(peasant4, 42, 2);
 	   			peasant1.isAiMiner = true;
 	   			peasant2.isAiMiner = true;
 	   			peasant3.isAiMiner = true;
@@ -300,7 +300,7 @@ game.teamContainer = me.Container.extend({
    		if(unit.name === 'peasant'){
    			this.getMiningPeasantCount();
    			if(this.aiMinerCount < this.aiMaxMiners){
-   				this.aiMoveUnit(unit, 44, -12);
+   				this.aiMoveUnit(unit, 62, 2);
    				unit.isAiMiner = true;
    			}
    			else{
@@ -382,7 +382,7 @@ game.teamContainer = me.Container.extend({
    		me.timer.setInterval(function(){
    			ai.forEach(function (child){
    				if((child.type === 'armyUnit') && (child.name != 'peasant')){
-   					ai.aiMoveUnit(child, 760, 410);
+   					ai.aiMoveUnit(child, 830, 470);
    				}
    			})
     	}, ai.aiAttackCooldown, false);
