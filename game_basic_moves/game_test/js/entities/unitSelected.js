@@ -10,7 +10,7 @@ game.unitSelected = me.Renderable.extend({
         this._super(me.Renderable, 'init', [0, 0, 0, 0]);
         this.alwaysUpdate = true;
         this.name = "unitSelected";
-		this.anchorPoint.set(0.25, 0.25);
+		this.anchorPoint.set(0, 0);
 //		this.body.vel.x = 0;
 //		this.body.vel.y = 0;
 		this.setOpacity(.4);

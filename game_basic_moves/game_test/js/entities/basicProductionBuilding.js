@@ -1,7 +1,6 @@
 game.BasicProductionBuilding = me.Entity.extend({
 
     init : function() {
-		//this.myBox = me.game.world.addChild(me.pool.pull("unitSelected"));
 		this.clickpos = me.input.globalToLocal(0,0);
 		this.myTarget = null;
 		this.attacking = false;

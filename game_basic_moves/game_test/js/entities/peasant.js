@@ -20,7 +20,8 @@ game.Peasant = game.Troop.extend({
         this._super(me.Entity, 'init', [x, y, {
         	image: image,
         	width: 32,
-        	height: 32}]);
+        	height: 32,
+        	anchorPoint: {"x": 0.5, "y": 0.5}}]);
         this.team = team;
         this.name = "peasant";
 		this.renderable.flipX(true);
@@ -57,7 +58,9 @@ game.Peasant = game.Troop.extend({
 
 		//reset collision make smaller
 		this.body.removeShape(this.body.getShape(0));
-		this.body.addShape(new me.Rect(0,0,13,13));
+		this.body.addShape(new me.Rect(0,0,16,16));
+		this.body.updateBounds();
+		this.attackSquare = new me.Rect(-2,-2,20,20);
 		this.teamContainer = teamContainer;
 		this.myBox = this.teamContainer.addChild(me.pool.pull("unitSelected"));
 		//this.anchorPoint.set(0.5, .5);

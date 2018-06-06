@@ -59,6 +59,7 @@ game.Knight = game.Troop.extend({
 		//reset collision make smaller
 		this.body.removeShape(this.body.getShape(0));
 		this.body.addShape(new me.Rect(0,0,13,13));
+		this.body.updateBounds();
 		this.teamContainer = teamContainer;
 		//this.anchorPoint.set(0.5, .5);
 		this.clickpos = me.input.globalToLocal(0,0);

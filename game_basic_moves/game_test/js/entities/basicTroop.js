@@ -12,37 +12,12 @@ game.Troop = me.Entity.extend({
 		this.nextAttackTick = 999999999;
 		this.alwaysUpdate = true;
 		this.teamContainer = null;
+		this.targetWidth = 0;
+		this.targetHeight = 0;
    },
 
 
     update : function (dt) {
-
-    	/*
-	    //ARROW KEY MOVEMENT
-	    if (me.input.isKeyPressed('left')) {
-	      // flip the sprite on horizontal axis
-	      this.renderable.flipX(false);
-
-	      // update the entity velocity
-	      this.body.vel.x -= this.body.accel.x * me.timer.tick;
-	    }
-	    else if (me.input.isKeyPressed('right')) {
-	      // unflip the sprite
-	      this.renderable.flipX(true);
-
-	      // update the entity velocity
-	      this.body.vel.x += this.body.accel.x * me.timer.tick;
-	    }
-	    else if (me.input.isKeyPressed('up')) {
-	      // update the entity velocity
-	      this.body.vel.y -= this.body.accel.y * me.timer.tick;
-	    }
-	    else if (me.input.isKeyPressed('down')) {
-	      // update the entity velocity
-	      this.body.vel.y += this.body.accel.y * me.timer.tick;
-	    }
-		*/
-
 		// TODO: Make it possible for units to kite each other. This would probably be implemented by locking a unit in place if it
 		// has an attack queued.
 
@@ -66,8 +41,18 @@ game.Troop = me.Entity.extend({
 		if (this.attacker != null) {
 			if (!this.attacking && this.beingAttacked && this.attacker.alive) {
 				this.attacking = true;
+				this.beingAttacked = false;
 				this.myTarget = this.attacker;
-				this.clickpos = this.myTarget.pos;
+				this.targetWidth = (this.myTarget.width/2);
+	   			this.targetHeight = (this.myTarget.height/2);
+	   			this.clickpos.x = 0;
+				this.clickpos.y = 0;
+				this.clickpos.x += this.myTarget.pos.x;
+				this.clickpos.y += this.myTarget.pos.y;
+				this.clickpos.x += this.targetWidth;
+				this.clickpos.y += this.targetHeight;
+	   			console.log(this);
+				//this.clickpos = this.myTarget.pos;
 			}
 		}
 
@@ -77,6 +62,16 @@ game.Troop = me.Entity.extend({
 				this.attacking = false;
 				this.attackTarget = false;
 				this.engagedInCombat = false;
+			}
+			else{
+				this.targetWidth = (this.myTarget.width/2);
+	   			this.targetHeight = (this.myTarget.height/2);
+	   			this.clickpos.x = 0;
+				this.clickpos.y = 0;
+				this.clickpos.x += this.myTarget.pos.x;
+				this.clickpos.y += this.myTarget.pos.y;
+				this.clickpos.x += this.targetWidth;
+				this.clickpos.y += this.targetHeight;
 			}
 		}
 		if (this.attacker != null) {
@@ -88,23 +83,20 @@ game.Troop = me.Entity.extend({
 		// Handles distance from target calculations for attack purposes. Differentiates between combat styles -tb 5/14/18
 		if (this.attacking) {
 			if (this.attackType === 'melee') {
-				var distanceToTargetX = Math.abs(this.pos.x - this.myTarget.pos.x);
-				var distanceToTargetY = Math.abs(this.pos.y - this.myTarget.pos.y);
+				var distanceToTargetX = Math.abs((this.pos.x+16) - (this.clickpos.x + this.targetWidth));
+				var distanceToTargetY = Math.abs((this.pos.y+16) - (this.clickpos.y + this.targetHeight));
 				//console.log(distanceToTargetX);
 				//console.log(distanceToTargetY);
-				//TEMPORARY FIX FOR ATTACKING BUILDINGS
-				if((this.myTarget.type === "building") && (distanceToTargetX < 256) && (distanceToTargetY < 128)){
-					//console.log('bldg');
-				}
-				else if (distanceToTargetX > 17 || distanceToTargetY > 17) {
+				if (distanceToTargetX >= ((this.targetWidth*2)+2) || distanceToTargetY >= ((this.targetHeight*2)+2)) {
 					this.needsMoveX = true;
 					this.needsMoveY = true;
 					this.engagedInCombat = false;
+					console.log("loop?");
 				}
 			}
 			if (this.attackType === 'ranged') {
-				var distanceToTargetX = Math.abs(this.pos.x - this.myTarget.pos.x);
-				var distanceToTargetY = Math.abs(this.pos.y - this.myTarget.pos.y);
+				var distanceToTargetX = Math.abs((this.pos.x+16) - (this.clickpos.x + this.targetWidth));
+				var distanceToTargetY = Math.abs((this.pos.y+16) - (this.clickpos.y + this.targetHeight));
 				//console.log(distanceToTargetX);
 				//console.log(distanceToTargetY);
 				if (distanceToTargetX > this.attackRange || distanceToTargetY > this.attackRange) {
@@ -114,6 +106,7 @@ game.Troop = me.Entity.extend({
 				}
 			}
 		}
+
 
 
 	   // else if (me.input.isKeyPressed('leftclick')) DEPRECATED
@@ -135,22 +128,33 @@ game.Troop = me.Entity.extend({
 	   		// But it is all I've been able to get to work so far. -tb
 	   		// note: commented out team check below for now, since the new containers will only iterate over the enemy
 			this.teamContainer.otherTeamReference.forEach(function (child){
-	   			if(clickSpot.overlaps(child) && (child.type === 'armyUnit' || child.type ==='building') ){//&& (child != myself) && (child.team != myself.team)){
-	   					attackRegistered = true;
-	   					attackTarget = child;
-	   			}
+				if(child.getBounds() != null){
+		   			if(clickSpot.overlaps(child.getBounds()) && (child.type === 'armyUnit' || child.type ==='building') ){//&& (child != myself) && (child.team != myself.team)){
+		   					attackRegistered = true;
+		   					attackTarget = child;
+		   					console.log("attacking");
+		   			}
+		   		}
 	   		})
 	   		if (attackRegistered) {
 	   			// Here the scope has changed so I can refer to the unit using the keyword -tb
 	   			this.attacking = true;
 	   			this.myTarget = attackTarget;
+	   			// Target width and height is taken in and divided by two. this sets the outer bounds when attacking.
+	   			this.targetWidth = (this.myTarget.width/2);
+	   			this.targetHeight = (this.myTarget.height/2);
 	   		}
 			if(this.attacking === true){
 				// If attacking is true, set the destination to be equal to the location of the targeted unit -tb
-				this.clickpos = this.myTarget.pos;
+				this.clickpos.x = 0;
+				this.clickpos.y = 0;
+				this.clickpos.x += this.myTarget.pos.x;
+				this.clickpos.y += this.myTarget.pos.y;
+				this.clickpos.x += this.targetWidth;
+				this.clickpos.y += this.targetHeight;
 			}
 			else {
-	   			this.clickpos = me.input.globalToLocal(me.input.pointer.clientX, me.input.pointer.clientY);
+	   		this.clickpos = me.input.globalToLocal(me.input.pointer.clientX, me.input.pointer.clientY);
 	   		}
 
 	   		//me.game.world.removeChild(clickSpot);
@@ -161,59 +165,86 @@ game.Troop = me.Entity.extend({
 	   		// I set up these vars to track whether criteria is met for ending movement on both axes and only turn off movement when both are satisfied. -tb
 	   		var Xcontinue = true;
 	   		var Ycontinue = true;
+			if(this.attacking === true){
+				// If attacking is true, set the destination to be equal to the location of the targeted unit -tb
+				this.clickpos.x = 0;
+				this.clickpos.y = 0;
+				this.clickpos.x += this.myTarget.pos.x;
+				this.clickpos.y += this.myTarget.pos.y;
+				this.clickpos.x += (this.myTarget.width / 2);
+				this.clickpos.y += (this.myTarget.height / 2);
+			}
 		    //X MOVEMENT
-	   		if(this.needsMoveX && this.pos.x < this.clickpos.x - 16){
+	   		if(this.needsMoveX && (this.pos.x+16) < this.clickpos.x-1){
 		    	this.renderable.flipX(true);
 		    	this.body.vel.x += this.body.accel.x * me.timer.tick;
 
 		    	//stop moving if close
 		    	// Changed 15 to 10 in these lines. Seemed to resolve an issue where unit would get stuck on corner and flip back and forth indefinitely. -tb
-		    	if(this.pos.x < this.clickpos.x - 10 && this.pos.x > this.clickpos.x - 17){
-		    		Xcontinue = false;
-		    		this.body.vel.x = 0;
-		    	}
+/*		    	if(this.attacking === true){
+			    	if(this.pos.x < (this.clickpos.x + (this.targetWidth)) && this.pos.x > (this.clickpos.x - (this.targetWidth))){
+			    		console.log("from left stop");
+			    		Xcontinue = false;
+			    		//console.log("x fin");
+			    		this.body.vel.x = 0;
+			    	}
+			    }*/
 		    }
-		  	else if(this.needsMoveX && this.pos.x > this.clickpos.x + 16){
+		  	else if(this.needsMoveX && (this.pos.x+16) > this.clickpos.x+1){
 	    	    this.renderable.flipX(false);
 		    	this.body.vel.x -= this.body.accel.x * me.timer.tick;
 
-		    	if(this.pos.x < this.clickpos.x - 10 && this.pos.x > this.clickpos.x - 17){
-		    		Xcontinue = false;
-		    		this.body.vel.x = 0;
-		    	}
+/*				if(this.attacking === true){
+			    	if(this.pos.x < (this.clickpos.x + (this.targetWidth)) && this.pos.x > (this.clickpos.x - (this.targetWidth))){
+			    		console.log("from right stop");
+			    		Xcontinue = false;
+			    		//console.log("x fin");			    		
+			    		this.body.vel.x = 0;
+			    	}
+			    }*/
 		    }
 		    else{
 		    	Xcontinue = false;
+		    	this.body.vel.x = 0;
 		    }
 
 
 		    //Y MOVEMENT
-	   		if(this.needsMoveY && this.pos.y < this.clickpos.y - 16){
+	   		if(this.needsMoveY && (this.pos.y+16) < this.clickpos.y-1){
 		    	this.body.vel.y += this.body.accel.y * me.timer.tick;
 
-		    	if(this.pos.y < this.clickpos.y - 10 && this.pos.y > this.clickpos.y - 17){
-		    		Ycontinue = false;
-		    		this.body.vel.y = 0;
-		    	}
+/*		    	if(this.attacking === true){
+			    	if(this.pos.y < (this.clickpos.y + (this.targetHeight)) && this.pos.y > (this.clickpos.y - (this.targetHeight))){
+			    		Ycontinue = false;
+			    		console.log("above stop");
+			    		//console.log("y fin");
+			    		this.body.vel.y = 0;
+			    	}
+			    }*/
 		    }
-		  	else if(this.needsMoveY && this.pos.y > this.clickpos.y + 16){
+		  	else if(this.needsMoveY && (this.pos.y+16) > this.clickpos.y+1){
 		    	this.body.vel.y -= this.body.accel.y * me.timer.tick;
 
 
-		    	if(this.pos.y < this.clickpos.y - 10 && this.pos.y > this.clickpos.y - 17){
-		    		Ycontinue = false;
-		    		this.body.vel.y = 0;
-		    	}
+/*		    	if(this.attacking === true){
+			    	if(this.pos.y < (this.clickpos.y+5) && this.pos.y > (this.clickpos.y - (this.targetHeight))){
+			    		console.log("below stop");
+			    		Ycontinue = false;
+			    		//console.log("y fin");
+			    		this.body.vel.y = 0;
+			    	}
+			    }*/
 		    }		  
 		    else{
 		    	Ycontinue = false;
+		    	this.body.vel.y = 0;
 		    }
 
 		    // Stopping conditions for ranged units must be handled differently from those of melee units, but movement calculations are
 		    // identical, so the check can be performed here at the end of the block -tb 5/14/18
 		    if (this.attackType === 'ranged' && this.attacking) {
-		    	var distanceToTargetX = Math.abs(this.pos.x - this.myTarget.pos.x);
-				var distanceToTargetY = Math.abs(this.pos.y - this.myTarget.pos.y);
+		    	var distanceToTargetX = Math.abs((this.pos.x+16) - this.clickpos.x);
+				var distanceToTargetY = Math.abs((this.pos.y+16) - this.clickpos.y);
 				//console.log(distanceToTargetX);
 				//console.log(distanceToTargetY);
 				if (distanceToTargetX <= this.attackRange && distanceToTargetY <= this.attackRange) {
@@ -222,10 +253,11 @@ game.Troop = me.Entity.extend({
 			    }
 			}
 	    	
-		    	// Unit has satisfied the movement criteria for both axes. -tb
-			    if (!Ycontinue && !Xcontinue){
+	    	// Unit has satisfied the movement criteria for both axes. -tb
+		    if (!Ycontinue && !Xcontinue){
 			    	this.needsMoveY = false;
 			    	this.needsMoveX = false;
+			    	console.log('triggered');
 			    }
 	  		}
 	  	
@@ -317,11 +349,9 @@ game.Troop = me.Entity.extend({
 	   	//	response.b.needsMoveX = false;
 	   	//}
 	
-
-
 	   	//NOTE: currently slightly buggy with cavalry/fast units
 		//BUILDING/WORLD COLLISION
-		if(response.a.type === 'building' || response.b.type === 'building'){
+		else if(response.a.type === 'building' || response.b.type === 'building'){
 		    //X AXIS COLLISION
 		    //UNIT IS ON BOTTOM OF BUILDING
 		    if(response.overlapV.y < 0){
@@ -371,36 +401,47 @@ game.Troop = me.Entity.extend({
 
 	   	//UNIT COLLISION
 		//ONE COLLISION ALTERNATIVE: PUSH EACH OTHER
-		else if(response.a.type === 'armyUnit' && response.b.type === 'armyUnit'){
-		    //X AXIS COLLISION
-		    //a's bottom edge collided with b (a is on top)
-		    if(response.overlapV.y < 0){
-		   		//a move up and b move down
-		   		response.a.pos.y++;
-		   		response.b.pos.y--;
-		    }
-		    //a's top edge collided with b (a is on bottom)
-		    else if(response.overlapV.y > 0){
-		   		//a move down and b move up
-		   		response.a.pos.y--;
-		   		response.b.pos.y++;
-		    }
-		    //Y AXIS COLLISION
-		    //a's right edge collided with b (a is on b's left)
-		    if(response.overlapV.x < 0){
-		   		//a move left and b move right
-		   		response.a.pos.x--;
-		   		response.b.pos.x++;
-		    }
-		    //a's left edge collided with b (a is on b's right)
-		    else if(response.overlapV.x > 0){
-		   		//a move right and b move left
-		   		response.a.pos.x++;
-		   		response.b.pos.x--;
-		    }
-		}
+		else if(response.a.type === 'armyUnit' && response.b.type === 'armyUnit')
+
+			if(response.a.team === response.b.team) {
+			    //X AXIS COLLISION
+			    //a's bottom edge collided with b (a is on top)
+			    if(response.overlapV.y < 0){
+			   		//a move up and b move down
+			   		response.a.pos.y++;
+			   		response.b.pos.y--;
+			    }
+			    //a's top edge collided with b (a is on bottom)
+			    else if(response.overlapV.y > 0){
+			   		//a move down and b move up
+			   		response.a.pos.y--;
+			   		response.b.pos.y++;
+			    }
+			    //Y AXIS COLLISION
+			    //a's right edge collided with b (a is on b's left)
+			    if(response.overlapV.x < 0){
+			   		//a move left and b move right
+			   		response.a.pos.x--;
+			   		response.b.pos.x++;
+			    }
+			    //a's left edge collided with b (a is on b's right)
+			    else if(response.overlapV.x > 0){
+			   		//a move right and b move left
+			   		response.a.pos.x++;
+			   		response.b.pos.x--;
+			    }
+			}
+			else if (response.a.attacking && (!response.b.needsMoveX || !response.b.needsMoveY)) {
+				response.a.attacking = true;
+				response.b.attacking = true;
+				response.a.myTarget = response.b;
+				response.b.myTarget = response.a;
+				console.log(response.a);
+				console.log(response.b);
+			}
 		
 
+		/*
 		//for ai: automatically attack anything colliding with
 		if((response.a.type === 'armyUnit' && response.a.teamContainer.PLAYER_OR_AI === 'AI')
 			 && ((response.b.type === 'armyUnit' || response.b.type === 'building') && response.b.teamContainer.PLAYER_OR_AI === 'PLAYER')){
@@ -414,6 +455,8 @@ game.Troop = me.Entity.extend({
 			response.b.myTarget = response.b;
 			response.b.attacker = response.a;
 		}
+		*/
+
 
 
 	    // Make the object solid

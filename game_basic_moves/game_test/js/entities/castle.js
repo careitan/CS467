@@ -20,11 +20,14 @@ game.Castle = game.BasicProductionBuilding.extend({
         this._super(me.Entity, 'init', [x, y, {
         	image: image,
         	width: 128,
-        	height: 128}]);
+        	height: 128,
+        	anchorPoint: {"x": .5, "y": .5}}]);
+
 
         this.name = "castle";
         this.type = 'building';
         this.team = team;
+        this.autoTransform = true;
         this.aiIdx = -1;
 		// Unit Traits
 		this.hp = 15;
@@ -35,7 +38,9 @@ game.Castle = game.BasicProductionBuilding.extend({
 
 		//reset collision make smaller
 		this.body.removeShape(this.body.getShape(0));
-		this.body.addShape(new me.Rect(0,0,128,93));
+		this.body.addShape(new me.Rect(0,0,110,80));
+		this.body.updateBounds();
+		this.renderable.updateBounds();
 		this.body.getShape(0).translate(0,20);
 		this.teamContainer = teamContainer;
 		this.teamContainer.numCastle++;
