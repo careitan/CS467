@@ -92,7 +92,11 @@ game.Troop = me.Entity.extend({
 				var distanceToTargetY = Math.abs(this.pos.y - this.myTarget.pos.y);
 				//console.log(distanceToTargetX);
 				//console.log(distanceToTargetY);
-				if (distanceToTargetX > 17 || distanceToTargetY > 17) {
+				//TEMPORARY FIX FOR ATTACKING BUILDINGS
+				if((this.myTarget.type === "building") && (distanceToTargetX < 256) && (distanceToTargetY < 128)){
+					//console.log('bldg');
+				}
+				else if (distanceToTargetX > 17 || distanceToTargetY > 17) {
 					this.needsMoveX = true;
 					this.needsMoveY = true;
 					this.engagedInCombat = false;
@@ -110,7 +114,6 @@ game.Troop = me.Entity.extend({
 				}
 			}
 		}
-
 
 
 	   // else if (me.input.isKeyPressed('leftclick')) DEPRECATED
@@ -147,7 +150,7 @@ game.Troop = me.Entity.extend({
 				this.clickpos = this.myTarget.pos;
 			}
 			else {
-	   		this.clickpos = me.input.globalToLocal(me.input.pointer.clientX, me.input.pointer.clientY);
+	   			this.clickpos = me.input.globalToLocal(me.input.pointer.clientX, me.input.pointer.clientY);
 	   		}
 
 	   		//me.game.world.removeChild(clickSpot);
@@ -397,6 +400,21 @@ game.Troop = me.Entity.extend({
 		    }
 		}
 		
+
+		//for ai: automatically attack anything colliding with
+		if((response.a.type === 'armyUnit' && response.a.teamContainer.PLAYER_OR_AI === 'AI')
+			 && ((response.b.type === 'armyUnit' || response.b.type === 'building') && response.b.teamContainer.PLAYER_OR_AI === 'PLAYER')){
+			response.a.attacking = true;
+			response.a.myTarget = response.b;
+			response.a.attacker = response.b;
+		}
+		else if	((response.b.type === 'armyUnit' && response.b.teamContainer.PLAYER_OR_AI === 'AI')
+			 	&& ((response.a.type === 'armyUnit' || response.a.type === 'building') && response.a.teamContainer.PLAYER_OR_AI === 'PLAYER')){
+			response.b.attacking = true;
+			response.b.myTarget = response.b;
+			response.b.attacker = response.a;
+		}
+
 
 	    // Make the object solid
 	    // false because this is only the illusion of collision

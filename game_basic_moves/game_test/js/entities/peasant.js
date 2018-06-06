@@ -25,6 +25,7 @@ game.Peasant = game.Troop.extend({
         this.name = "peasant";
 		this.renderable.flipX(true);
 		this.body.gravity = 0;
+		this.isAiMiner = false;
 		//this.floating = true;
 		this.body.collisionType = me.collision.types.PLAYER_OBJECT;
 		this.alwaysUpdate = true;
@@ -124,7 +125,7 @@ game.Peasant = game.Troop.extend({
 		this.mining = false;
 		this.goldmineHandle = null;
 		me.timer.clearInterval(this.miningId);
-
+		this.isAiMiner = false;
     },
 
     //'hack' to prevent accidentally building multiple buildings stacked on each other if enough gold for multiple

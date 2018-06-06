@@ -12,26 +12,39 @@ game.teamContainer = me.Container.extend({
 		this.numCastle = 0;
 		this.numRange = 0;
 		this.numStables = 0;
+		this.curBldgIdx = 0;
 		//this.army = [];
 		//this.peasants = [];
+		this.aiBldgIdx = [false,false,false,false,
+							false,false,false,false,
+							false,false,false,false];
+		this.aiMinerCount = 4;
+		this.aiMaxMiners = 4;
+		this.skipFirstAiUnits = true;
+		this.aiAttackCooldown = 25000;
+		if(me.game.world.AI_DIFFICULTY === "HARD"){
+			this.aiMaxMiners = 7;
+			this.aiAttackCooldown = 15000;
+		}
 		if(PLAYER_OR_AI === "PLAYER"){
 			this.name = "playerContainer";
 		}
 		else if(PLAYER_OR_AI === "AI"){
 			this.name = "aiContainer";
+			this.aiBldgCoordArr = [[50,170],[220,50],[220,170],[390,50],[560,50],
+									[730,50],[390,170],[560,170],[730,170],[50,290],
+									[220,290],[50,410]];
 		}
    },
 
    initializeTeam : function() {
-   		//THEN DO LIKE addUnitToContainer GET UNIT AND CHANGE RELEVANT PROPS WITH UNIT.PROP
-   		//PROBABLY A FOR LOOP FOR THE ONES THAT ACTUALLY MATTER (POS, HP)
-
    		//load saved buildings and units
    		if(me.game.world.LOAD_FROM_COOKIE){
    			//prevent bug when loading game after victory/defeat
    			//this will force a fresh restart if that is attempted
    			var okToLoad = this.makeSureBothCastlesExist();
    			if(okToLoad){
+   				this.skipFirstAiUnits = false;
 	   			this.loadInitFromCookie();
 	   			this.loadBuildingsFromCookie();
 	   			this.loadUnitsFromCookie();
@@ -66,11 +79,20 @@ game.teamContainer = me.Container.extend({
 	   			this.addUnitToContainer("peasant", 860, 515);
 	   		}
 	   		else if(this.PLAYER_OR_AI == "AI") {
-				this.addUnitToContainer("castle", 50, 50);
-	   			this.addUnitToContainer("peasant", 60, 155);
-	   			this.addUnitToContainer("peasant", 90, 155);
-	   			this.addUnitToContainer("peasant", 120, 155);
-	   			this.addUnitToContainer("peasant", 150, 155);
+				this.addUnitToContainer("castle", 50, 55);
+	   			var peasant1 = this.addUnitToContainer("peasant", 60, 155);
+	   			var peasant2 = this.addUnitToContainer("peasant", 90, 155);
+	   			var peasant3 = this.addUnitToContainer("peasant", 120, 155);
+	   			var peasant4 = this.addUnitToContainer("peasant", 150, 155);
+	   			this.aiMoveUnit(peasant1, 12, -8);
+	   			this.aiMoveUnit(peasant2, 14, 0);
+	   			this.aiMoveUnit(peasant3, 34, -12);
+	   			this.aiMoveUnit(peasant4, 44, -12);
+	   			peasant1.isAiMiner = true;
+	   			peasant2.isAiMiner = true;
+	   			peasant3.isAiMiner = true;
+	   			peasant4.isAiMiner = true;
+	   			this.skipFirstAiUnits = false;
 	   		}
 	   		else{
 	   			console.log("init team error : team is " + this.team);
@@ -82,6 +104,11 @@ game.teamContainer = me.Container.extend({
    		var unit = me.pool.pull(unitName, x, y, this.team, this);
    		this.addChild(unit);  
    		unit.teamContainer = this;
+   		if(this.PLAYER_OR_AI === "AI"){
+   			if(!this.skipFirstAiUnits){
+   				this.handleAiUnit(unit);
+   			}
+   		}
    		return unit;
    },
 
@@ -135,9 +162,15 @@ game.teamContainer = me.Container.extend({
    			var addedBldg = this.addUnitToContainer(dataArray[0], Number(dataArray[2]), Number(dataArray[3]));
    			addedBldg.hp = dataArray[1];
 
+   			if(this.PLAYER_OR_AI === "AI"){
+   				//console.log(dataArray[4]);
+   				addedBldg.aiIdx = dataArray[4];
+   			}
+
    			bldgNum++;
    			thisCookieName = cookieName+bldgNum;
    		}
+   		this.updateBldgIdx();
    },
 
    loadUnitsFromCookie : function() {
@@ -246,9 +279,117 @@ game.teamContainer = me.Container.extend({
    			deleteAllCookies();
    			return false;
    		}
-   }
+   },
+
+
+
+
+
+    /**********************/
+	/***   AI FUNCTIONS ***/
+	/**********************/
+
+   runAiBrains : function(){
+   		this.checkMoneyAndBuild();
+   		this.attackTowardsPlayerCastleEveryOnceInAWhile();
+   },
+
+
+   handleAiUnit : function(unit){
+   		//console.log('handing '+unit.name);
+   		if(unit.name === 'peasant'){
+   			this.getMiningPeasantCount();
+   			if(this.aiMinerCount < this.aiMaxMiners){
+   				this.aiMoveUnit(unit, 44, -12);
+   				unit.isAiMiner = true;
+   			}
+   			else{
+   				this.aiMoveUnit(unit, 180, 240);
+   			}
+   		}
+   		//could add other special stuff for other units here
+   },
+
+   aiMoveUnit(unit, x, y){
+   		unit.clickpos.x = x;
+   		unit.clickpos.y = y;
+   		unit.needsMoveX = true;
+   		unit.needsMoveY = true;
+   },
+
+   getMiningPeasantCount : function(){
+   		this.aiMinerCount = 0;
+   		this.forEach(function (child){
+   			if(child.name === 'peasant' && child.isAiMiner){
+   				this.aiMinerCount++;
+   			}
+   		})
+   },
+
+   //get position to build next ai building
+   getNextAiBldgPos : function(){
+   		var nextBldgIdx = 13;
+   		var nextCoords = {x:0, y:0};
+   		var i;
+   		for(i = 0; i < 12; i++){
+   			if(this.aiBldgIdx[i] === false){
+   				nextBldgIdx = i;
+   				break;
+   			}
+   		}
+   		if(nextBldgIdx != 13){
+   			nextCoords.x = this.aiBldgCoordArr[nextBldgIdx][0];
+   			nextCoords.y = this.aiBldgCoordArr[nextBldgIdx][1];
+   			this.curBldgIdx = nextBldgIdx;
+   		}
+   		//console.log(nextCoords);
+   		return nextCoords;
+   },
+
+   //main function to build ai buildings
+   checkMoneyAndBuild : function(){
+   		var ai = this;
+   		me.timer.setInterval(function(){
+   			var nextBldgCoords = ai.getNextAiBldgPos();
+   			var costArr = [100,150,200,250];
+   			var bldgNameArr = ['tavern','barracks','range','stables'];
+   			var cost = costArr[(ai.curBldgIdx % 4)];
+   			var bldgName = bldgNameArr[(ai.curBldgIdx % 4)];
+
+   			console.log('ai building '+bldgName+' at cost of '+cost+'; current money is '+ai.gold);
+   			//prevent building if all building slots are currently full (i.e. if coords 0,0 were returned)
+   			if(ai.gold >= cost && !(nextBldgCoords.x === 0 && nextBldgCoords.y === 0)){
+   				var newBldg = ai.addUnitToContainer(bldgName, nextBldgCoords.x, nextBldgCoords.y);
+   				ai.gold -= cost;
+   				newBldg.aiIdx = ai.curBldgIdx;
+   				ai.aiBldgIdx[ai.curBldgIdx] = true;
+   			}    		
+    	}, 10000, false);
+   },
+
+
+   //keeps track of which buildings have been built on cookie load
+   updateBldgIdx : function(){
+   		this.forEach(function (child){
+   			if(child.aiIdx != undefined && child.aiIdx != -1){
+   				this.aiBldgIdx[child.aiIdx] = true;
+   			}
+   		})
+   	},
+
+   	attackTowardsPlayerCastleEveryOnceInAWhile : function(){
+   		var ai = this;
+   		me.timer.setInterval(function(){
+   			ai.forEach(function (child){
+   				if((child.type === 'armyUnit') && (child.name != 'peasant')){
+   					ai.aiMoveUnit(child, 760, 410);
+   				}
+   			})
+    	}, ai.aiAttackCooldown, false);
+   	},
 
 });
+
 
 
 //source: https://www.w3schools.com/js/js_cookies.asp

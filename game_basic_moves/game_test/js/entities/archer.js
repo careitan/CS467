@@ -3,7 +3,7 @@ game.Archer = game.Troop.extend({
     /**
      * constructor
      */
-    init : function(x, y, team) {
+    init : function(x, y, team, teamContainer) {
         // call the constructor
         if (team === 'blue') {
         	var image = me.loader.getImage("archer_blue");
@@ -42,9 +42,9 @@ game.Archer = game.Troop.extend({
 		//this.unit_sel_img = me.loader.getImage("unit_selected");
 		this.selected = false;
 		//console.log(this);
-
+		this.teamContainer = teamContainer;
 		this.type = 'armyUnit';
-		this.myBox = me.game.world.addChild(me.pool.pull("unitSelected"));
+		this.myBox = this.teamContainer.addChild(me.pool.pull("unitSelected"));
 
 		// Unit Traits
 		this.hp = 15;

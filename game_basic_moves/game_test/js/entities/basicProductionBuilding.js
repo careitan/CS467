@@ -19,6 +19,7 @@ game.BasicProductionBuilding = me.Entity.extend({
     	this.spawnUnit = null;
     	this.spawnTime = null;
     	this.maxSpawn = null;
+    	this.aiIdx = -1;
    },
 
 

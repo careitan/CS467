@@ -57,6 +57,7 @@ game.PlayScreen = me.ScreenObject.extend({
 		//console.log('started game w/ ai difficulty set to '+me.game.world.AI_DIFFICULTY);
 		//console.log("previous cookie is "+ JSON.stringify(document.cookie));
 		this.refreshCookie(player,ai);
+		ai.runAiBrains();
     },
 
     /**
@@ -151,6 +152,8 @@ function saveAllBuildings(player, ai){
 			bldgCookie += child.pos.x;
 			bldgCookie += "/"			
 			bldgCookie += child.pos.y;
+			bldgCookie += "/"			
+			bldgCookie += child.aiIdx;
 			bldgCookie += ";"
 			document.cookie = bldgCookie;
 			//increment number to differentiate next bldg 
