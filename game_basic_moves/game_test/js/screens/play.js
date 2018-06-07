@@ -66,9 +66,6 @@ game.PlayScreen = me.ScreenObject.extend({
     onDestroyEvent: function() {
         // remove the HUD from the game world
         me.game.world.removeChild(this.HUD);
-        me.game.world.forEach(function (child){
-        	me.game.world.removeChild(child);
-        })
     },
 
     //sets a handle to the player container in each object that will need it

@@ -26,7 +26,7 @@ game.Tavern = game.BasicProductionBuilding.extend({
         this.type = 'building';
 
 		// Unit Traits
-		this.hp = 15;
+		this.hp = 100;
 		this.attack = 3;
 		this.attackType = "melee";
 

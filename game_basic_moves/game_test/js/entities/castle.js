@@ -30,7 +30,7 @@ game.Castle = game.BasicProductionBuilding.extend({
         this.autoTransform = true;
         this.aiIdx = -1;
 		// Unit Traits
-		this.hp = 15;
+		this.hp = 500;
 		this.attack = 3;
 		this.attackType = "melee";
 		this.armor = 0;
