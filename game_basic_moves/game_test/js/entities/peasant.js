@@ -30,12 +30,10 @@ game.Peasant = game.Troop.extend({
 		//this.floating = true;
 		this.body.collisionType = me.collision.types.PLAYER_OBJECT;
 		this.alwaysUpdate = true;
-	//	this.renderable.addAnimation('walk', [2, 3, 4, 5, 6], 100);
-	//	this.renderable.addAnimation('walkV', [12], 100);
-	//	this.renderable.addAnimation('stand', [0, 1], 300);
-	//	this.renderable.addAnimation('standV', [1, 2], 300);
-	//	this.renderable.addAnimation('fire', [14]);
-	//	this.renderable.setCurrentAnimation('walk');
+		this.renderable.addAnimation('stand', [0]);
+		this.renderable.addAnimation('attack', [0,1,2,3,4,5], 200);
+		this.renderable.addAnimation('mine', [6,7,8,9,10,11], 200);
+		this.renderable.setCurrentAnimation('stand');
 		this.needsMoveX = false;
 		this.needsMovey = false;
 		this.autoTransform = true;
@@ -105,6 +103,21 @@ game.Peasant = game.Troop.extend({
     	}
 
 
+    	/*
+    	//animations
+    	if((!this.renderable.isCurrentAnimation("mine")) && this.mining){
+    		this.renderable.setCurrentAnimation("mine");
+    		console.log('set to mining');
+    	}
+    	else if((!this.renderable.isCurrentAnimation("attack")) && this.attacking){
+    		this.renderable.setCurrentAnimation("attack");
+    		console.log('set to attacking');
+    	}
+    	else if(!this.renderable.isCurrentAnimation("stand")){
+    		this.renderable.setCurrentAnimation("stand");
+    		console.log('set to standing');
+    	}*/
+
     	//call regular troop update
     	this._super(game.Troop, 'update', [dt]);
     },
@@ -113,7 +126,8 @@ game.Peasant = game.Troop.extend({
     givePlayerGold : function(goldPerFiveSeconds, goldmineHandle) {
     	this.goldmineHandle = goldmineHandle;
     	var team = this.teamContainer;
-
+    	this.renderable.setCurrentAnimation("mine");
+    	console.log('mine anim');
     	var id = me.timer.setInterval(function(){
     		//console.log('giving ' + goldPerFiveSeconds + ' gold!');
     		team.gold += goldPerFiveSeconds;

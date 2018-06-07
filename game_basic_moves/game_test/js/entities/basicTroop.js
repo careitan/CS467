@@ -51,7 +51,7 @@ game.Troop = me.Entity.extend({
 				this.clickpos.y += this.myTarget.pos.y;
 				this.clickpos.x += this.targetWidth;
 				this.clickpos.y += this.targetHeight;
-	   			console.log(this);
+	   			//console.log(this);
 				//this.clickpos = this.myTarget.pos;
 			}
 		}
@@ -91,7 +91,7 @@ game.Troop = me.Entity.extend({
 					this.needsMoveX = true;
 					this.needsMoveY = true;
 					this.engagedInCombat = false;
-					console.log("loop?");
+					//console.log("loop?");
 				}
 			}
 			if (this.attackType === 'ranged') {
@@ -132,7 +132,7 @@ game.Troop = me.Entity.extend({
 		   			if(clickSpot.overlaps(child.getBounds()) && (child.type === 'armyUnit' || child.type ==='building') ){//&& (child != myself) && (child.team != myself.team)){
 		   					attackRegistered = true;
 		   					attackTarget = child;
-		   					console.log("attacking");
+		   					//console.log("attacking");
 		   			}
 		   		}
 	   		})
@@ -157,7 +157,7 @@ game.Troop = me.Entity.extend({
 	   		this.clickpos = me.input.globalToLocal(me.input.pointer.clientX, me.input.pointer.clientY);
 	   		}
 
-	   		//me.game.world.removeChild(clickSpot);
+	   		
 	   		this.needsMoveX = true;
 	   		this.needsMoveY = true;
 	   	}
@@ -257,7 +257,7 @@ game.Troop = me.Entity.extend({
 		    if (!Ycontinue && !Xcontinue){
 			    	this.needsMoveY = false;
 			    	this.needsMoveX = false;
-			    	console.log('triggered');
+			    	//console.log('triggered');
 			    }
 	  		}
 	  	
@@ -311,7 +311,7 @@ game.Troop = me.Entity.extend({
        
 
         //return (this._super(me.Entity, 'update', [dt]) || this.body.vel.x !== 0 || this.body.vel.y !== 0);
-    	return true;
+    	return false;
     },
 
     // The attack handler takes both entities engaged in combat as its parameters
@@ -436,8 +436,8 @@ game.Troop = me.Entity.extend({
 				response.b.attacking = true;
 				response.a.myTarget = response.b;
 				response.b.myTarget = response.a;
-				console.log(response.a);
-				console.log(response.b);
+				//console.log(response.a);
+				//console.log(response.b);
 			}
 		
 
