@@ -19,7 +19,7 @@ game.teamContainer = me.Container.extend({
 							false,false,false,false,
 							false,false,false,false];
 		this.aiMinerCount = 4;
-		this.aiMaxMiners = 3;
+		this.aiMaxMiners = 4;
 		this.skipFirstAiUnits = true;
 		this.aiAttackCooldown = 25000;
 		if(me.game.world.AI_DIFFICULTY === "HARD"){
