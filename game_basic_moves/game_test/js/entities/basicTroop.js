@@ -143,6 +143,7 @@ game.Troop = me.Entity.extend({
 	   			// Target width and height is taken in and divided by two. this sets the outer bounds when attacking.
 	   			this.targetWidth = (this.myTarget.width/2);
 	   			this.targetHeight = (this.myTarget.height/2);
+	   			console.log(this.myTarget.name);
 	   		}
 			if(this.attacking === true){
 				// If attacking is true, set the destination to be equal to the location of the targeted unit -tb
@@ -452,7 +453,7 @@ game.Troop = me.Entity.extend({
 		else if	((response.b.type === 'armyUnit' && response.b.teamContainer.PLAYER_OR_AI === 'AI')
 			 	&& ((response.a.type === 'armyUnit' || response.a.type === 'building') && response.a.teamContainer.PLAYER_OR_AI === 'PLAYER')){
 			response.b.attacking = true;
-			response.b.myTarget = response.b;
+			response.b.myTarget = response.a; // FIXED
 			response.b.attacker = response.a;
 		}
 		

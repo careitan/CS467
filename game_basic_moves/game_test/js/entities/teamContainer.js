@@ -292,6 +292,7 @@ game.teamContainer = me.Container.extend({
    runAiBrains : function(){
    		this.checkMoneyAndBuild();
    		this.attackTowardsPlayerCastleEveryOnceInAWhile();
+   		this.defendCastle();
    },
 
 
@@ -387,6 +388,46 @@ game.teamContainer = me.Container.extend({
    			})
     	}, ai.aiAttackCooldown, false);
    	},
+   	
+   	defendCastle : function(){
+   		var ai = this;
+   		var enemyUnit = null;
+   		me.timer.setInterval(function(){
+   			var arrayOfAttackers = [];
+   			var arrayOfIdle = [];
+   			me.game.world.forEach(function (team){
+   				console.log('new');
+   				if(team.team === "blue"){
+   					team.forEach(function (unit){
+   						if(unit.type != "building" && unit.attacking){
+   		   					arrayOfAttackers.push(unit);
+   							console.log('attacker +1');
+   						}
+   					})
+   				}
+   				if(team.team === "red"){
+   					team.forEach(function (unit){
+		   				if(unit.type === "armyUnit" && unit.name != "peasant" && unit.team === "red" && !unit.attacking && !unit.needsMoveX){
+		   					arrayOfIdle.push(unit);
+		   					console.log('idle +1');
+		   				}
+	   				})
+  					team.forEach(function (unit){
+		   				if(unit.name === "peasant" && !unit.attacking && !unit.needsMoveX && !unit.mining){
+		   					arrayOfIdle.push(unit);
+		   					console.log('idle +1');
+		   				}
+	   				})
+   				}
+   			})
+   			if(arrayOfAttackers.length != 0){
+   	  			arrayOfIdle.forEach(function (unit){
+   					unit.myTarget = arrayOfAttackers[Math.floor(Math.random() * arrayOfAttackers.length)];
+   					unit.attacking = true;
+   				})
+   			}
+   		}, 5000, false);
+   	}
 
 });
 
