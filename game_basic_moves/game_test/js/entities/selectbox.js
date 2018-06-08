@@ -58,10 +58,10 @@ game.selectbox = me.Renderable.extend({
 	   			
 	   			//select army units
 	   			this.playerContainerHandle.forEach(function (child){
-	   				if(selectbox.overlaps(child) && child.type === 'armyUnit'){
+	   				if(selectbox.overlaps(child) && child.type === 'armyUnit' && child.teamContainer.PLAYER_OR_AI === "PLAYER"){
 	   					child.selected = true;
 	   				}
-	   				else if(child.type === 'armyUnit'){
+	   				else if(child.type === 'armyUnit' && child.teamContainer.PLAYER_OR_AI === "PLAYER"){
 	   					child.selected = false;
 	   				}
 	   			});
