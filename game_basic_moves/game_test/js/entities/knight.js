@@ -48,7 +48,7 @@ game.Knight = game.Troop.extend({
 		this.myBox = this.teamContainer.addChild(me.pool.pull("unitSelected"));
 		
 		// Unit Traits
-		this.hp = 20;
+		this.hp = 25;
 		this.attack = 4;
 		this.attackType = "melee";
 		this.body.setVelocity(.8, .8);

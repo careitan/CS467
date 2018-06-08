@@ -50,8 +50,8 @@ game.Archer = game.Troop.extend({
 		this.myBox = this.teamContainer.addChild(me.pool.pull("unitSelected"));
 
 		// Unit Traits
-		this.hp = 15;
-		this.attack = 2;
+		this.hp = 20;
+		this.attack = 3;
 		this.attackType = "ranged";
 		this.attackRange = 200;
 		this.body.setVelocity(.5, .5);

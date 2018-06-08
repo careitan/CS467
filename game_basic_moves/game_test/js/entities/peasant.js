@@ -47,7 +47,7 @@ game.Peasant = game.Troop.extend({
 
 		// Unit Traits
 		this.hp = 15;
-		this.attack = 3;
+		this.attack = 2;
 		this.attackType = "melee";
 		this.body.setVelocity(1, 1);
 		this.armor = 0;

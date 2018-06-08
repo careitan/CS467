@@ -19,12 +19,13 @@ game.teamContainer = me.Container.extend({
 							false,false,false,false,
 							false,false,false,false];
 		this.aiMinerCount = 4;
-		this.aiMaxMiners = 4;
+		this.aiMaxMiners = 3;
 		this.skipFirstAiUnits = true;
 		this.aiAttackCooldown = 25000;
 		if(me.game.world.AI_DIFFICULTY === "HARD"){
-			this.aiMaxMiners = 7;
-			this.aiAttackCooldown = 15000;
+			//this.aiMaxMiners = 7;
+			this.aiAttackCooldown = 10000;
+			this.aiMaxMiners = 4;
 		}
 		if(PLAYER_OR_AI === "PLAYER"){
 			this.name = "playerContainer";
@@ -396,12 +397,10 @@ game.teamContainer = me.Container.extend({
    			var arrayOfAttackers = [];
    			var arrayOfIdle = [];
    			me.game.world.forEach(function (team){
-   				console.log('new');
    				if(team.team === "blue"){
    					team.forEach(function (unit){
    						if(unit.type != "building" && unit.attacking){
    		   					arrayOfAttackers.push(unit);
-   							console.log('attacker +1');
    						}
    					})
    				}
@@ -409,13 +408,11 @@ game.teamContainer = me.Container.extend({
    					team.forEach(function (unit){
 		   				if(unit.type === "armyUnit" && unit.name != "peasant" && unit.team === "red" && !unit.attacking && !unit.needsMoveX){
 		   					arrayOfIdle.push(unit);
-		   					console.log('idle +1');
 		   				}
 	   				})
   					team.forEach(function (unit){
 		   				if(unit.name === "peasant" && !unit.attacking && !unit.needsMoveX && !unit.mining){
 		   					arrayOfIdle.push(unit);
-		   					console.log('idle +1');
 		   				}
 	   				})
    				}

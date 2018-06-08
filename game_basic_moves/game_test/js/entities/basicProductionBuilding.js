@@ -44,7 +44,12 @@ game.BasicProductionBuilding = me.Entity.extend({
     		})
 	    	//update maxSpawn in case new buildings were built after this one
 	    	if(buildingCountRef === "numCastle"){
-	    		maxSpawnNumber = 8 * teamContainer.numCastle;
+	    		if(teamColor === "red" && me.game.world.AI_DIFFICULTY === "EASY"){
+	    			maxSpawnNumber = 4 * teamContainer.numCastle;
+	    		}
+	    		else {
+	    			maxSpawnNumber = 8 * teamContainer.numCastle;
+	    		}
 	    	}else if(buildingCountRef === "numBarracks"){
 	    		maxSpawnNumber = 8 * teamContainer.numBarracks;
 	    	}else if(buildingCountRef === "numTavern"){

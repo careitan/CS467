@@ -51,8 +51,8 @@ game.Cavalry = game.Troop.extend({
 		this.myBox = this.teamContainer.addChild(me.pool.pull("unitSelected"));
 
 		// Unit Traits
-		this.hp = 15;
-		this.attack = 3;
+		this.hp = 25;
+		this.attack = 4;
 		this.attackType = "melee";
 		this.body.setVelocity(1, 1);
 		this.armor = 0;
