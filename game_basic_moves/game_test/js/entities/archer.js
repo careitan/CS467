@@ -26,6 +26,9 @@ game.Archer = game.Troop.extend({
         this.name = "Archer";
 		this.renderable.flipX(true);
 		this.body.gravity = 0;
+		this.renderable.addAnimation('stand', [0]);
+		this.renderable.addAnimation('attack', [1]);
+		this.renderable.setCurrentAnimation('stand');
 		//this.floating = true;
 	//	this.anchorPoint.set(10, 10);
 		this.body.collisionType = me.collision.types.PLAYER_OBJECT;
@@ -62,4 +65,20 @@ game.Archer = game.Troop.extend({
 		this.body.updateBounds();
 		//this.anchorPoint.set(0.5, .5);
 		this.clickpos = me.input.globalToLocal(0,0);
-   }});
+   },
+
+
+    update : function (dt) {
+    	if(this.attacking && (!this.renderable.isCurrentAnimation("attack"))){
+    		this.renderable.setCurrentAnimation("attack");
+    		//console.log('set to attacking');
+    	}
+    	else if(!this.renderable.isCurrentAnimation("stand") && (this.attacking === false)){
+    		this.renderable.setCurrentAnimation("stand");
+    		//console.log('set to standing');
+    	}
+
+    	//call regular troop update
+    	this._super(game.Troop, 'update', [dt]);
+    },
+});

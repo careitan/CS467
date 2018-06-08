@@ -54,7 +54,9 @@ game.Knight = game.Troop.extend({
 		this.body.setVelocity(.8, .8);
 		this.armor = 0;
 
-
+		this.renderable.addAnimation('stand', [0]);
+		this.renderable.addAnimation('attack', [1]);
+		this.renderable.setCurrentAnimation('stand');
 
 		//reset collision make smaller
 		this.body.removeShape(this.body.getShape(0));
@@ -63,5 +65,20 @@ game.Knight = game.Troop.extend({
 		this.teamContainer = teamContainer;
 		//this.anchorPoint.set(0.5, .5);
 		this.clickpos = me.input.globalToLocal(0,0);
-	}
+   },
+
+
+    update : function (dt) {
+    	if(this.attacking && (!this.renderable.isCurrentAnimation('attack'))){
+    		this.renderable.setCurrentAnimation('attack');
+    		//console.log('set to attacking');
+    	}
+    	else if(!this.renderable.isCurrentAnimation('stand') && (this.attacking === false)){
+    		this.renderable.setCurrentAnimation('stand');
+    		//console.log('set to standing');
+    	}
+
+    	//call regular troop update
+    	this._super(game.Troop, 'update', [dt]);
+    },
 });

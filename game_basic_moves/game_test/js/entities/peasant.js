@@ -31,8 +31,8 @@ game.Peasant = game.Troop.extend({
 		this.body.collisionType = me.collision.types.PLAYER_OBJECT;
 		this.alwaysUpdate = true;
 		this.renderable.addAnimation('stand', [0]);
-		this.renderable.addAnimation('attack', [0,1,2,3,4,5], 200);
-		this.renderable.addAnimation('mine', [6,7,8,9,10,11], 200);
+		this.renderable.addAnimation('attack', [5]);
+		this.renderable.addAnimation('mine', [11]);
 		this.renderable.setCurrentAnimation('stand');
 		this.needsMoveX = false;
 		this.needsMovey = false;
@@ -103,20 +103,14 @@ game.Peasant = game.Troop.extend({
     	}
 
 
-    	/*
-    	//animations
-    	if((!this.renderable.isCurrentAnimation("mine")) && this.mining){
-    		this.renderable.setCurrentAnimation("mine");
-    		console.log('set to mining');
-    	}
-    	else if((!this.renderable.isCurrentAnimation("attack")) && this.attacking){
+    	if(this.attacking && (!this.renderable.isCurrentAnimation("attack"))){
     		this.renderable.setCurrentAnimation("attack");
-    		console.log('set to attacking');
+    		//console.log('set to attacking');
     	}
-    	else if(!this.renderable.isCurrentAnimation("stand")){
+    	else if(this.renderable.isCurrentAnimation("attack") && (this.attacking === false)){
     		this.renderable.setCurrentAnimation("stand");
-    		console.log('set to standing');
-    	}*/
+    		//console.log('set to standing');
+    	}
 
     	//call regular troop update
     	this._super(game.Troop, 'update', [dt]);
@@ -127,7 +121,7 @@ game.Peasant = game.Troop.extend({
     	this.goldmineHandle = goldmineHandle;
     	var team = this.teamContainer;
     	this.renderable.setCurrentAnimation("mine");
-    	console.log('mine anim');
+    	//console.log('mine anim');
     	var id = me.timer.setInterval(function(){
     		//console.log('giving ' + goldPerFiveSeconds + ' gold!');
     		team.gold += goldPerFiveSeconds;
@@ -143,6 +137,7 @@ game.Peasant = game.Troop.extend({
 		this.goldmineHandle = null;
 		me.timer.clearInterval(this.miningId);
 		this.isAiMiner = false;
+		this.renderable.setCurrentAnimation('stand');
     },
 
     //'hack' to prevent accidentally building multiple buildings stacked on each other if enough gold for multiple
