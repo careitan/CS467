@@ -23,8 +23,12 @@ game.Troop = me.Entity.extend({
 
 		if (this.hp <= 0) {
 			this.alive = false;
-			this.teamContainer.removeChild(this.myBox);
-			this.teamContainer.removeChild(this);
+			if(this.teamContainer.hasChild(this.myBox)){
+				this.teamContainer.removeChild(this.myBox);
+			}
+			if(this.teamContainer.hasChild(this)){
+				this.teamContainer.removeChild(this);
+			}
 			var deadUnit = this;
 			this.teamContainer.forEach(function (child){
 	   			if(child.type === 'armyUnit' && child.attacker === deadUnit){
