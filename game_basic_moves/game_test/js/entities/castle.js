@@ -59,7 +59,9 @@ game.Castle = game.BasicProductionBuilding.extend({
 			this.alive = false;
 			//stop spawning units since the building is dead
 			me.timer.clearInterval(this.spawnId);
-			this.teamContainer.removeChild(this);
+			if(this.teamContainer.hasChild(this)){
+				this.teamContainer.removeChild(this);
+			}
 			this.teamContainer.numCastle--;
 			var deadUnit = this;
 			this.teamContainer.forEach(function (child){

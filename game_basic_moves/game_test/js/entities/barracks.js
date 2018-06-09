@@ -56,7 +56,9 @@ game.Barracks = game.BasicProductionBuilding.extend({
 			this.teamContainer.aiBldgIdx[this.aiIdx] = false;
 			//stop spawning units since the building is dead
 			me.timer.clearInterval(this.spawnId);
-			this.teamContainer.removeChild(this);
+			if(this.teamContainer.hasChild(this)){
+				this.teamContainer.removeChild(this);
+			}
 			this.teamContainer.numBarracks--;
 			var deadUnit = this;
 			this.teamContainer.forEach(function (child){
