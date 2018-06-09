@@ -55,22 +55,22 @@ game.selectbox = me.Renderable.extend({
 	   				selectbox.width = Math.abs(selectbox.width);
 	   			}
 
-	   			
-	   			//select army units
-	   			this.playerContainerHandle.forEach(function (child){
-	   				if(selectbox.overlaps(child) && child.type === 'armyUnit' && child.teamContainer.PLAYER_OR_AI === "PLAYER"){
-	   					child.selected = true;
-	   				}
-	   				else if(child.type === 'armyUnit' && child.teamContainer.PLAYER_OR_AI === "PLAYER"){
-	   					child.selected = false;
-	   				}
-	   			});
+	   			if(this.playerContainerHandle != null && this.playerContainerHandle != undefined){
+		   			//select army units
+		   			this.playerContainerHandle.forEach(function (child){
+		   				if(selectbox.overlaps(child) && child.type === 'armyUnit' && child.teamContainer.PLAYER_OR_AI === "PLAYER"){
+		   					child.selected = true;
+		   				}
+		   				else if(child.type === 'armyUnit' && child.teamContainer.PLAYER_OR_AI === "PLAYER"){
+		   					child.selected = false;
+		   				}
+		   			});
 
-	   			//add building selection here?
-	   			//condition = can't select army units and buildings at same time
-	   			//or maybe for now just make buildings automatically create units every X seconds
-	   			//to at least get something basic working
-
+		   			//add building selection here?
+		   			//condition = can't select army units and buildings at same time
+		   			//or maybe for now just make buildings automatically create units every X seconds
+		   			//to at least get something basic working
+		   		}
 	   		}
 	   		this.moved = false;
 	   		this.height = 0;
